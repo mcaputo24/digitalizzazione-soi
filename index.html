@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digitalizzazione SOI - Questionario</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo Sviluppo Lavoro Italia">
+        <h1>Rilevazione dei bisogni di orientamento</h1>
+        <p>Classi I delle scuole secondarie di I grado</p>
+    </header>
+
+    <main>
+        <form id="soi-form">
+            <fieldset>
+                <legend>Dati dello Studente</legend>
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="cognome">Cognome:</label>
+                    <input type="text" id="cognome" name="cognome" required>
+                </div>
+                <div class="form-group">
+                    <label for="classe">Classe:</label>
+                    <input type="text" id="classe" name="classe" required>
+                </div>
+                <div class="form-group">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" name="data" required>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
+                <p>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</p>
+                <div class="grid-inputs">
+                    <input type="text" name="aggettivo_1" placeholder="1.">
+                    <input type="text" name="aggettivo_2" placeholder="2.">
+                    <input type="text" name="aggettivo_10" placeholder="10.">
+                </div>
+                 <p>Utilizzando alcuni di questi aggettivi, descrivi dove e come li usi.</p>
+                <div id="mappa-container"></div>
+                <button type="button" id="add-mappa-block">Aggiungi Descrizione</button>
+                <hr>
+                <label>Tra le attività che hai descritto, scegli le due che ti piacciono di più e prova a dire perché.</label>
+                <textarea name="scheda1_attivita_preferite"></textarea>
+                <label>E rispetto alla scuola, cosa ti piace?</label>
+                <textarea name="scheda1_preferenze_scolastiche"></textarea>
+            </fieldset>
+            
+            <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
+        </form>
+        
+        <div id="completion-section" style="display:none;">
+            <h2>Grazie per aver completato il questionario!</h2>
+            <p>Le tue risposte sono state salvate correttamente.</p>
+            <button id="download-pdf-btn">Scarica il Riepilogo in PDF</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

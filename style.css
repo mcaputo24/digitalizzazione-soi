@@ -1,0 +1,8 @@
+/* Stile di base, header, form, fieldset, etc. */
+body { font-family: sans-serif; margin: 0; background-color: #f4f4f9; }
+header { background-color: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #ddd; }
+header img { max-width: 250px; }
+main { max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; }
+fieldset { border: 1px solid #ccc; border-radius: 8px; margin-bottom: 20px; }
+legend { font-size: 1.5em; font-weight: bold; color: #005a87; }
+/* ... altri stili ... */
