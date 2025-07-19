@@ -1,35 +1,74 @@
 // Attende il caricamento completo della pagina
 document.addEventListener('DOMContentLoaded', () => {
-    
+    // Inserisci questo codice dentro a: document.addEventListener('DOMContentLoaded', () => { ... });
+
+const mappaContainer = document.getElementById('mappa-container');
+const addMappaBtn = document.getElementById('add-mappa-block');
+let mappaBlockCount = 0;
+
+addMappaBtn.addEventListener('click', () => {
+    mappaBlockCount++;
+    const block = document.createElement('div');
+    block.classList.add('mappa-block');
+    block.innerHTML = `
+        <h4>Descrizione #${mappaBlockCount}</h4>
+        <div class="form-group">
+            <label>Qualità/Aggettivo:</label>
+            <input type="text" name="mappa_${mappaBlockCount}_aggettivo">
+        </div>
+        <div class="form-group">
+            <label>Dove la usi di più?</label>
+            <input type="text" name="mappa_${mappaBlockCount}_dove">
+        </div>
+        <div class="form-group">
+            <label>In quale attività?</label>
+            <input type="text" name="mappa_${mappaBlockCount}_attivita">
+        </div>
+        <div class="form-group">
+            <label>Con chi?</label>
+            <input type="text" name="mappa_${mappaBlockCount}_con_chi">
+        </div>
+    `;
+    mappaContainer.appendChild(block);
+});
     // Logica per aggiungere dinamicamente i blocchi della "Mappa di Sé"
     // ...
 
     const form = document.getElementById('soi-form');
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Impedisce l'invio tradizionale del form
-        
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+    // Sostituisci il vecchio event listener del form con questo
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Salvataggio in corso...';
 
-        // Invia i dati alla Netlify Function per salvarli su Firebase
-        try {
-            const response = await fetch('/.netlify/functions/submit-data', {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-            if (response.ok) {
-                // Mostra la sezione di completamento e nasconde il form
-                form.style.display = 'none';
-                document.getElementById('completion-section').style.display = 'block';
-            } else {
-                alert('Si è verificato un errore durante il salvataggio.');
-            }
-        } catch (error) {
-            console.error('Errore:', error);
-            alert('Errore di connessione.');
+    try {
+        const response = await fetch('/.netlify/functions/submit-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            form.style.display = 'none';
+            document.getElementById('completion-section').style.display = 'block';
+        } else {
+            // Se c'è un errore, leggiamo il testo dell'errore dal server
+            const errorData = await response.json();
+            alert(`Si è verificato un errore durante il salvataggio: ${errorData.message}`);
+            submitButton.disabled = false;
+            submitButton.textContent = 'Invia e Salva i Dati';
         }
-    });
+    } catch (error) {
+        console.error('Errore di connessione:', error);
+        alert('Errore di connessione. Controlla la console del browser per i dettagli.');
+        submitButton.disabled = false;
+        submitButton.textContent = 'Invia e Salva i Dati';
+    }
+});
 
     // Gestione del download PDF
     document.getElementById('download-pdf-btn').addEventListener('click', () => {
