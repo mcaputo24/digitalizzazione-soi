@@ -1,37 +1,49 @@
-// Richiede le credenziali Firebase dalle variabili d'ambiente di Netlify
 const admin = require('firebase-admin');
 
-const serviceAccount = {
-  type: process.env.FIREBASE_TYPE,
-  project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  // ... altre credenziali
-};
+try {
+  // Leggiamo e interpretiamo le credenziali dalla singola variabile d'ambiente
+  const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
-// Inizializza Firebase solo una volta
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+  // Inizializziamo Firebase solo se non è già stato fatto
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+  }
+} catch (error) {
+  console.error('Errore di inizializzazione Firebase:', error);
 }
 
 const db = admin.firestore();
 
 exports.handler = async (event, context) => {
+  // Controlliamo che la richiesta sia un POST
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
+  }
+
   try {
     const data = JSON.parse(event.body);
-    const schoolId = process.env.SCHOOL_ID; // ID univoco della scuola!
+    const schoolId = process.env.SCHOOL_ID;
 
-    // Salva i dati in Firestore nella collection della scuola specifica
+    // Aggiungiamo un controllo per essere sicuri che SCHOOL_ID sia impostato
+    if (!schoolId) {
+      throw new Error('La variabile d\'ambiente SCHOOL_ID non è stata impostata su Netlify.');
+    }
+    
+    // Scriviamo i dati su Firestore
     await db.collection('scuole').doc(schoolId).collection('studenti').add(data);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Dati salvati con successo" })
+      body: JSON.stringify({ message: 'Dati salvati con successo' })
     };
   } catch (error) {
-    return { statusCode: 500, body: error.toString() };
+    // Logghiamo l'errore specifico per un debug più facile
+    console.error('Errore nella funzione:', error);
+    return { 
+      statusCode: 500, 
+      body: JSON.stringify({ message: error.message }) 
+    };
   }
 };
