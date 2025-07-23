@@ -6,6 +6,7 @@
     <title>Digitalizzazione SOI - Questionario</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
 </head>
 <body>
     <header>
@@ -37,27 +38,33 @@
             </fieldset>
 
             <fieldset>
-<p>Le mappe sono rappresentazioni grafiche (come fossero disegni) che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso). </p>
                 <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
-                <p>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti. [cite: 20]</p>
-<div class="grid-inputs">
-    <input type="text" name="aggettivo_1" placeholder="1.">
-    <input type="text" name="aggettivo_2" placeholder="2.">
-    <input type="text" name="aggettivo_3" placeholder="3.">
-    <input type="text" name="aggettivo_4" placeholder="4.">
-    <input type="text" name="aggettivo_5" placeholder="5.">
-    <input type="text" name="aggettivo_6" placeholder="6.">
-    <input type="text" name="aggettivo_7" placeholder="7.">
-    <input type="text" name="aggettivo_8" placeholder="8.">
-    <input type="text" name="aggettivo_9" placeholder="9.">
-    <input type="text" name="aggettivo_10" placeholder="10.">
-</div>
-                 <p>Utilizzando alcuni di questi aggettivi, descrivi dove e come li usi.</p>
-                <div id="mappa-container"></div>
-<p>Utilizzando alcuni di questi aggettivi, quelli che ritieni più importanti per descriverti, disegna una mappa di te stesso (sempre la famosa fotografia), in cui tu sei al centro del foglio (io sono), subito dopo: Inserisci i singoli aggettivi, scrivendoli intorno a “io sono”; Collega i vari aggetti direttamente al “io sono” (con te stesso) al centro del foglio, disegnando delle righe; Indica sotto o a fianco ad ogni aggettivo/qualità qual è il posto dove la usi di più, in quale attività e con chi (amici, compagni di scuola, genitori, allenatori, etc.). </p>
-                <button type="button" id="add-mappa-block">Aggiungi Descrizione</button>
+                <p>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</p>
+                <div class="grid-inputs">
+                    <input type="text" name="aggettivo_1" placeholder="1.">
+                    <input type="text" name="aggettivo_2" placeholder="2.">
+                    <input type="text" name="aggettivo_3" placeholder="3.">
+                    <input type="text" name="aggettivo_4" placeholder="4.">
+                    <input type="text" name="aggettivo_5" placeholder="5.">
+                    <input type="text" name="aggettivo_6" placeholder="6.">
+                    <input type="text" name="aggettivo_7" placeholder="7.">
+                    <input type="text" name="aggettivo_8" placeholder="8.">
+                    <input type="text" name="aggettivo_9" placeholder="9.">
+                    <input type="text" name="aggettivo_10" placeholder="10.">
+                </div>
                 <hr>
-                <label>Tra le attività che hai descritto, scegli le due che ti piacciono di più e prova a dire perché.</label>
+                <p>Ora usa gli aggettivi più importanti per costruire la tua mappa qui sotto. Aggiungi le tue qualità e poi clicca su di esse per aggiungere dettagli come attività e contesti.</p>
+                
+                <div class="map-section">
+                    <div id="cy"></div>
+                    <div id="map-controls">
+                        <h3>Pannello di Controllo Mappa</h3>
+                        <div id="controls-content">
+                            </div>
+                    </div>
+                </div>
+                <hr>
+                <label>Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label>
                 <textarea name="scheda1_attivita_preferite"></textarea>
                 <label>E rispetto alla scuola, cosa ti piace?</label>
                 <textarea name="scheda1_preferenze_scolastiche"></textarea>
