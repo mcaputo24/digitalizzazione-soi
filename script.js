@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definizione del pannello di controllo
     const controlsContent = document.getElementById('controls-content');
     let selectedNode = null;
 
@@ -7,47 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const cy = cytoscape({
         container: document.getElementById('cy'),
         elements: [
-            // Elemento centrale fisso
             { data: { id: 'io_sono', label: 'IO SONO' }, position: { x: 300, y: 200 }, locked: true, classes: 'io-sono' }
         ],
         style: [
-            {
-                selector: 'node',
-                style: {
-                    'label': 'data(label)',
-                    'text-valign': 'center',
-                    'color': '#fff',
-                    'text-outline-width': 2,
-                    'text-outline-color': '#888',
-                    'background-color': '#888',
-                    'width': 'label',
-                    'height': 'label',
-                    'padding': '10px',
-                    'shape': 'round-rectangle'
-                }
-            },
-            {
-                selector: 'edge',
-                style: {
-                    'width': 3,
-                    'line-color': '#ccc',
-                    'target-arrow-color': '#ccc',
-                    'target-arrow-shape': 'triangle',
-                    'curve-style': 'bezier'
-                }
-            },
+            { selector: 'node', style: { 'label': 'data(label)', 'text-valign': 'center', 'color': '#fff', 'text-outline-width': 2, 'text-outline-color': '#888', 'background-color': '#888', 'width': 'label', 'height': 'label', 'padding': '10px', 'shape': 'round-rectangle', 'text-wrap': 'wrap', 'text-max-width': '120px' } },
+            { selector: 'edge', style: { 'width': 3, 'line-color': '#ccc', 'target-arrow-color': '#ccc', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' } },
             { selector: '.io-sono', style: { 'background-color': '#005a87', 'text-outline-color': '#005a87' } },
             { selector: '.qualita', style: { 'background-color': '#3a7d44', 'text-outline-color': '#3a7d44' } },
             { selector: '.dettaglio', style: { 'background-color': '#c15c2d', 'text-outline-color': '#c15c2d' } },
             { selector: ':selected', style: { 'border-width': 3, 'border-color': '#DAA520' } }
         ],
-        layout: {
-            name: 'preset'
-        }
+        layout: { name: 'preset' }
     });
 
     // --- Funzioni per aggiornare il pannello di controllo ---
     function renderBaseControls() {
+        selectedNode = null;
+        cy.elements().unselect(); // Deseleziona qualsiasi elemento
         controlsContent.innerHTML = `
             <div class="form-group">
                 <label for="new-qualita">Aggiungi una qualità:</label>
@@ -68,10 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <button type="button" id="add-dettaglio-btn">+ Aggiungi Dettaglio</button>
             <hr>
+            <button type="button" id="delete-node-btn" class="delete-btn">❌ Elimina questa voce</button>
             <button type="button" id="back-to-base-btn">Torna Indietro</button>
         `;
         document.getElementById('add-dettaglio-btn').addEventListener('click', addDettaglioNode);
+        document.getElementById('delete-node-btn').addEventListener('click', deleteSelectedNode);
         document.getElementById('back-to-base-btn').addEventListener('click', renderBaseControls);
+    }
+    
+    // --- Funzione per cancellare un nodo ---
+    function deleteSelectedNode() {
+        if (selectedNode) {
+            selectedNode.remove();
+            renderBaseControls();
+        }
     }
 
     // --- Funzioni per aggiungere nodi alla mappa ---
@@ -106,7 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Gestione Eventi della Mappa ---
     cy.on('tap', 'node', function(evt){
         const node = evt.target;
-        if (node.id() !== 'io_sono' && node.hasClass('qualita')) {
+        // Permette di selezionare solo i nodi 'qualita' o 'dettaglio'
+        if (node.id() !== 'io_sono') {
             renderDetailControls(node);
         }
     });
@@ -114,18 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inizializza il pannello di controllo
     renderBaseControls();
 
-    // --- Gestione Invio Form (con aggiunta dati mappa) ---
+    // --- Gestione Invio Form (invariata) ---
     const form = document.getElementById('soi-form');
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const submitButton = event.target.querySelector('button[type="submit"]');
         submitButton.disabled = true;
         submitButton.textContent = 'Salvataggio in corso...';
-
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-        
-        // Aggiungi i dati della mappa al form
         data.mappa_interattiva = cy.json();
 
         try {
@@ -134,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-
             if (response.ok) {
                 form.style.display = 'none';
                 document.getElementById('completion-section').style.display = 'block';
@@ -154,8 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestione PDF (invariata)
     document.getElementById('download-pdf-btn').addEventListener('click', () => {
-        // La logica per il PDF va qui...
-        // ... per ora la lasciamo invariata, ma andrà aggiornata per includere la mappa.
         alert("La generazione del PDF con la mappa sarà implementata in un secondo momento.");
     });
 });

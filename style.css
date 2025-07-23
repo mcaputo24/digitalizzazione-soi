@@ -60,3 +60,27 @@ legend { font-size: 1.5em; font-weight: bold; color: #005a87; }
 #map-controls button:hover {
     background-color: #218838;
 }
+/* Stile per il pulsante di cancellazione */
+.delete-btn {
+    background-color: #dc3545 !important; /* Il !important serve per sovrascrivere altri stili */
+}
+
+.delete-btn:hover {
+    background-color: #c82333 !important;
+}
+
+/* Media Query per la responsività su smartphone (schermi fino a 768px) */
+@media (max-width: 768px) {
+    .map-section {
+        flex-direction: column;
+    }
+
+    #cy, #map-controls {
+        width: 100%;
+        box-sizing: border-box; /* Assicura che il padding non aumenti la larghezza */
+    }
+
+    #cy {
+        height: 400px; /* Altezza ridotta per schermi piccoli */
+    }
+}
