@@ -40,9 +40,9 @@
             <fieldset>
                 <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
 
-                <p>Le mappe sono rappresentazioni grafiche (come fossero disegni) che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
+                <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
 
-                <p><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
+                <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
                 <div class="grid-inputs">
                     <input type="text" name="aggettivo_1" placeholder="1.">
                     <input type="text" name="aggettivo_2" placeholder="2.">
@@ -57,38 +57,24 @@
                 </div>
                 <hr>
                 
-                <p>Utilizzando alcuni di questi aggettivi, quelli che ritieni più importanti per descriverti, disegna una mappa di te stesso (sempre la famosa fotografia), in cui tu sei al centro del foglio (io sono), subito dopo:
-                <ol>
-                    <li>Inserisci i singoli aggettivi, scrivendoli intorno a “io sono”;</li>
-                    <li>Collega i vari aggettivi direttamente al “io sono” (con te stesso) al centro del foglio, disegnando delle righe;</li>
-                </ol>
-                Indica sotto o a fianco ad ogni aggettivo/qualità qual è il posto dove la usi di più, in quale attività e con chi (amici, compagni di scuola, genitori, allenatori, etc.). Traccia, poi, delle righe ulteriori per collegare l’aggettivo al resto delle informazioni (posto, attività, con chi).
-                </p>
-
-                <div class="instructions-box">
-                    <strong>Come usare lo strumento:</strong>
-                    <ul>
-                        <li>Usa il "Pannello di Controllo" per aggiungere le tue qualità. Appariranno collegate a "IO SONO".</li>
-                        <li>Clicca su una qualità che hai aggiunto per far apparire i campi e aggiungere dettagli (attività e contesti).</li>
-                        <li>Clicca su una voce per selezionarla e poi sul pulsante "Elimina" per cancellarla.</li>
-                    </ul>
+                <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
+                
+                <div class="image-container">
+                    <p><strong>Esempio di mappa:</strong></p>
+                    <img src="mappa-esempio.png" alt="Esempio di una mappa concettuale">
                 </div>
-
-                <p><strong>Esempio di mappa:</strong></p>
-                <img src="mappa-esempio.png" alt="Esempio di una mappa concettuale" style="max-width: 100%; border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
 
                 <div class="map-section">
                     <div id="cy"></div>
                     <div id="map-controls">
-                        <h3>Pannello di Controllo Mappa</h3>
+                        <h3>Pannello di Controllo</h3>
                         <div id="controls-content"></div>
                     </div>
                 </div>
                 <hr>
 
-                <p>Nella tabella sottostante trovi alcuni aggettivi che potresti usare per descriverti.</p>
-                <details class="suggestions-table">
-                    <summary>Clicca qui per mostrare/nascondere la tabella dei suggerimenti</summary>
+                <details class="suggestions-container">
+                    <summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
                     <table>
                         <thead>
                             <tr><th>CARATTERISTICHE PERSONALI</th></tr>
@@ -111,6 +97,8 @@
                     </table>
                 </details>
                 <hr>
+                
+                <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
 
                 <div class="form-group">
                     <label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label>
@@ -122,6 +110,7 @@
                 </div>
 
             </fieldset>
+            
             <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
         </form>
         
