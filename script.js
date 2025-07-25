@@ -32,15 +32,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderDetailControls(node) {
         selectedNode = node;
+        let deleteButtonText = '❌ Elimina questa voce';
+        if (node.hasClass('aggettivo')) {
+            deleteButtonText = '❌ Elimina aggettivo e collegamenti';
+        }
+
         controlsContent.innerHTML = `
             <h4>Dettagli per: "${node.data('label')}"</h4>
-            <p>Cosa vuoi collegare a questo aggettivo?</p>
-            <button type="button" id="show-attivita-input">+ Aggiungi Attività</button>
-            <button type="button" id="show-contesto-input">+ Aggiungi Contesto</button>
+            <div id="detail-actions">
+                <p>Cosa vuoi collegare a questo aggettivo?</p>
+                <button type="button" id="show-attivita-input">+ Aggiungi Attività</button>
+                <button type="button" id="show-contesto-input">+ Aggiungi Contesto</button>
+            </div>
             <hr>
-            <button type="button" id="delete-node-btn" class="delete-btn">❌ Elimina questo aggettivo</button>
+            <button type="button" id="delete-node-btn" class="delete-btn">${deleteButtonText}</button>
             <button type="button" id="back-to-base-btn">Annulla</button>
         `;
+
+        const detailActions = document.getElementById('detail-actions');
+        // Nasconde i pulsanti "Attività/Contesto" se il nodo non è un aggettivo
+        if (!node.hasClass('aggettivo')) {
+            detailActions.style.display = 'none';
+        }
+
         document.getElementById('show-attivita-input').addEventListener('click', () => showDetailInput('attivita'));
         document.getElementById('show-contesto-input').addEventListener('click', () => showDetailInput('contesto'));
         document.getElementById('delete-node-btn').addEventListener('click', deleteSelectedNode);
@@ -62,17 +76,29 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('cancel-detail-btn').addEventListener('click', () => renderDetailControls(selectedNode));
     }
 
+    // ================= NUOVA FUNZIONE DI CANCELLAZIONE =================
     function deleteSelectedNode() {
-        if (selectedNode) { selectedNode.remove(); renderBaseControls(); }
+        if (selectedNode) {
+            // Trova tutti i nodi collegati IN USCITA dal nodo selezionato (i suoi "figli")
+            const children = selectedNode.outgoers('node');
+            
+            // Rimuove il nodo selezionato E tutti i suoi figli
+            selectedNode.union(children).remove();
+            
+            // Resetta il pannello di controllo
+            renderBaseControls();
+        }
     }
+    // =================================================================
 
     function addAggettivoNode() {
         const input = document.getElementById('new-aggettivo');
         const label = input.value.trim();
         if (label) {
+            const newNodeId = `aggettivo_${Date.now()}`;
             cy.add([
-                { group: 'nodes', data: { id: `aggettivo_${Date.now()}`, label: label }, classes: 'aggettivo' },
-                { group: 'edges', data: { source: 'io_sono', target: `aggettivo_${Date.now()}` } }
+                { group: 'nodes', data: { id: newNodeId, label: label }, classes: 'aggettivo' },
+                { group: 'edges', data: { source: 'io_sono', target: newNodeId } }
             ]);
             cy.layout({ name: 'cose', animate: true, padding: 30 }).run();
             input.value = '';
@@ -95,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cy.on('tap', 'node', function(evt){
         const node = evt.target;
-        if (node.hasClass('aggettivo')) {
+        if (node.id() !== 'io_sono') {
             renderDetailControls(node);
         }
     });
