@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // =================================================================
-    // ========= LOGICA SCHEDA 1: MAPPA INTERATTIVA (CYTOSCAPE) ========
-    // =================================================================
     const controlsContent = document.getElementById('controls-content');
     let selectedNode = null;
 
@@ -116,17 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cy.on('tap', 'node', function(evt){
         const node = evt.target;
-        if (node.id() !== 'io_sono') {
+        if (node.hasClass('aggettivo')) {
             renderDetailControls(node);
         }
     });
 
     renderBaseControls();
 
-
-    // =================================================================
-    // ========= LOGICA SCHEDA 3: CONTEGGIO AUTOMATICO =================
-    // =================================================================
     const scores = { gente: 0, dati: 0, idee: 0, cose: 0 };
     const scoreSpans = {
         gente: document.getElementById('punteggio-gente'),
@@ -134,26 +127,17 @@ document.addEventListener('DOMContentLoaded', () => {
         idee: document.getElementById('punteggio-idee'),
         cose: document.getElementById('punteggio-cose')
     };
-    
     const checkboxes = document.querySelectorAll('input[type="checkbox"][data-category]');
-    
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
             const category = checkbox.dataset.category;
-            if (checkbox.checked) {
-                scores[category]++;
-            } else {
-                scores[category]--;
-            }
+            scores[category] = checkbox.checked ? scores[category] + 1 : scores[category] - 1;
             scoreSpans[category].textContent = scores[category];
         });
     });
-
-
-    // =================================================================
-    // ========= GESTIONE INVIO FORM E PDF =============================
-    // =================================================================
+    
     const form = document.getElementById('soi-form');
+    let savedData = {}; // Variabile per conservare i dati dopo l'invio
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const submitButton = event.target.querySelector('button[type="submit"]');
@@ -162,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         data.mappa_interattiva = cy.json();
+        savedData = data; // Salva i dati per il PDF
 
         try {
             const response = await fetch('/.netlify/functions/submit-data', {
@@ -186,7 +171,124 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // ================= NUOVA LOGICA PER LA GENERAZIONE DEL PDF =================
     document.getElementById('download-pdf-btn').addEventListener('click', () => {
-        alert("La generazione del PDF con la mappa sarà implementata in un secondo momento.");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        let y = 20;
+
+        function checkPageBreak(neededHeight = 10) {
+            if (y + neededHeight > doc.internal.pageSize.getHeight() - margin) {
+                doc.addPage();
+                y = margin;
+            }
+        }
+
+        // TITOLO E DATI STUDENTE
+        doc.setFontSize(20).setFont(undefined, 'bold');
+        doc.text('Riepilogo Questionario SOI', pageWidth / 2, y, { align: 'center' });
+        y += 15;
+        doc.setFontSize(12).setFont(undefined, 'normal');
+        doc.text(`Studente: ${savedData.nome || ''} ${savedData.cognome || ''}`, margin, y);
+        y += 7;
+        doc.text(`Classe: ${savedData.classe || ''}`, margin, y);
+        y += 7;
+        doc.text(`Data: ${savedData.data || ''}`, margin, y);
+        y += 15;
+
+        // FUNZIONE PER AGGIUNGERE SEZIONI
+        function addSection(title, data) {
+            checkPageBreak(20);
+            doc.setFontSize(16).setFont(undefined, 'bold');
+            doc.text(title, margin, y);
+            y += 10;
+            doc.setDrawColor(200).line(margin, y, pageWidth - margin, y);
+            y += 8;
+
+            doc.setFontSize(11).setFont(undefined, 'normal');
+            data.forEach(({ label, value }) => {
+                if(value) {
+                    checkPageBreak(15);
+                    doc.setFont(undefined, 'bold').text(label, margin, y);
+                    const splitText = doc.splitTextToSize(value, pageWidth - margin * 2);
+                    doc.setFont(undefined, 'normal').text(splitText, margin, y + 6);
+                    y += (splitText.length * 5) + 8;
+                }
+            });
+            y += 5;
+        }
+
+        // SCHEDA 1
+        doc.setFontSize(16).setFont(undefined, 'bold').text("SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ", margin, y);
+        y += 10;
+        const aggettivi = [];
+        for (let i = 1; i <= 10; i++) {
+            if (savedData[`aggettivo_${i}`]) aggettivi.push(savedData[`aggettivo_${i}`]);
+        }
+        addSection("10 Aggettivi", [{ label: "I tuoi aggettivi:", value: aggettivi.join(', ') }]);
+        
+        // Rappresentazione testuale della mappa
+        checkPageBreak(20);
+        doc.setFontSize(11).setFont(undefined, 'bold').text("La tua mappa interattiva:", margin, y);
+        y += 8;
+        doc.setFont(undefined, 'normal');
+        const mapData = savedData.mappa_interattiva.elements;
+        const aggettivoNodes = mapData.nodes.filter(n => n.classes.includes('aggettivo'));
+        aggettivoNodes.forEach(aggettivo => {
+            checkPageBreak(8);
+            doc.setFont(undefined, 'bold').text(`• ${aggettivo.data.label}:`, margin + 5, y);
+            y += 6;
+            const connectedEdges = mapData.edges.filter(e => e.data.source === aggettivo.data.id);
+            connectedEdges.forEach(edge => {
+                const targetNode = mapData.nodes.find(n => n.data.id === edge.data.target);
+                checkPageBreak(6);
+                const type = targetNode.classes.includes('attivita') ? 'Attività' : 'Contesto';
+                doc.setFont(undefined, 'normal').text(`- ${type}: ${targetNode.data.label}`, margin + 10, y);
+                y += 6;
+            });
+        });
+        y += 8;
+
+        addSection("Riflessioni (Scheda 1)", [
+            { label: "Le due attività che ti piacciono di più e perché:", value: savedData.scheda1_attivita_preferite },
+            { label: "Cosa ti piace della scuola:", value: savedData.scheda1_preferenze_scolastiche }
+        ]);
+
+        // SCHEDA 2
+        addSection("SCHEDA 2 – UN PENSIERO SUL LAVORO", [
+            { label: "Secondo te, cosa è il lavoro?", value: savedData.scheda2_cosa_e_lavoro },
+            { label: "Perché le persone lavorano?", value: savedData.scheda2_perche_si_lavora },
+            { label: "Se nessuno lavorasse, cosa succederebbe?", value: savedData.scheda2_se_nessuno_lavorasse },
+            { label: "Se penso al lavoro, mi sento...", value: savedData.scheda2_come_mi_sento }
+        ]);
+
+        // SCHEDA 3
+        checkPageBreak(20);
+        doc.setFontSize(16).setFont(undefined, 'bold').text("SCHEDA 3 – MODI DI LAVORARE", margin, y);
+        y += 10;
+        addSection("Riepilogo Punteggi", [
+            { label: "Lavorare con la Gente:", value: `${scores.gente} su 10` },
+            { label: "Lavorare con i Dati:", value: `${scores.dati} su 10` },
+            { label: "Lavorare con le Idee:", value: `${scores.idee} su 10` },
+            { label: "Lavorare con le Cose:", value: `${scores.cose} su 10` }
+        ]);
+        addSection("Riflessione (Scheda 3)", [
+            { label: "Cosa hai capito di te e come ti piacerebbe lavorare?", value: savedData.scheda3_riflessione }
+        ]);
+
+        // SCHEDA 4
+        addSection("SCHEDA 4 – TUTTE LE POSSIBILI STRADE", [
+            { label: "Quali lavori ti piacerebbe fare da grande?", value: savedData.scheda4_lavori_desiderati },
+            { label: "Come ti immagini mentre svolgi uno di questi lavori?", value: savedData.scheda4_immaginario_lavoro },
+            { label: "Perché pensi che questo lavoro faccia per te?", value: savedData.scheda4_motivazioni },
+            { label: "Quali desideri, sogni, obiettivi pensi di poter realizzare?", value: savedData.scheda4_desideri_sogni },
+            { label: "C'è qualcuno che ammiri o che ti ispira?", value: savedData.scheda4_ispirazione },
+            { label: "Qual è il modo di studiare che funziona meglio per te?", value: savedData.scheda4_modo_studiare }
+        ]);
+
+        // SALVATAGGIO DEL FILE
+        doc.save(`Riepilogo_SOI_${savedData.cognome || 'Studente'}_${savedData.nome || ''}.pdf`);
     });
 });
