@@ -19,30 +19,111 @@
         <form id="soi-form">
             <fieldset>
                 <legend>Dati dello Studente</legend>
-                </fieldset>
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="cognome">Cognome:</label>
+                    <input type="text" id="cognome" name="cognome" required>
+                </div>
+                <div class="form-group">
+                    <label for="classe">Classe:</label>
+                    <input type="text" id="classe" name="classe" required>
+                </div>
+                <div class="form-group">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" name="data" required>
+                </div>
+            </fieldset>
+
             <fieldset>
                 <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
-                </fieldset>
+
+                <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
+                <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
+                <div class="grid-inputs">
+                    <input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10.">
+                </div>
+                <hr>
+                <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
+                <div class="image-container">
+                    <p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale">
+                </div>
+                <div class="map-section">
+                    <div id="cy"></div>
+                    <div id="map-controls">
+                        <h3>Pannello di Controllo</h3>
+                        <div id="controls-content"></div>
+                    </div>
+                </div>
+                <hr>
+                <details class="suggestions-container">
+                    <summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
+                    <table>
+                        <thead><tr><th>CARATTERISTICHE PERSONALI</th></tr></thead>
+                        <tbody>
+                            <tr><td>Corretto</td><td>Protettivo</td><td>Intelligente</td></tr>
+                            <tr><td>Paziente</td><td>Collaborativo</td><td>Capace di assumere responsabilità</td></tr>
+                            <tr><td>Autoritario</td><td>Estroverso</td><td>Simpatico</td></tr>
+                            <tr><td>Avventuroso</td><td>Fidato</td><td>Sincero</td></tr>
+                            <tr><td>Benevolo</td><td>Fiducioso negli altri</td><td>Socievole</td></tr>
+                            <tr><td>Calcolatore</td><td>Generoso</td><td>Creativo</td></tr>
+                            <tr><td>Calmo</td><td>Adattabile</td><td>Tenace</td></tr>
+                            <tr><td>Solidale</td><td>Intraprendente</td><td>Tollerante</td></tr>
+                            <tr><td>Capace di cambiamento</td><td>Intuitivo</td><td>Umile</td></tr>
+                            <tr><td>Competente</td><td>Portato al risultato</td><td>Sensibile</td></tr>
+                            <tr><td>Comunicativo</td><td>Preciso</td><td>Affidabile</td></tr>
+                            <tr><td>Leale</td><td>Coinvolgente</td><td>Deciso</td></tr>
+                            <tr><td>Costante</td><td>Razionale</td><td>Sicuro di sé</td></tr>
+                        </tbody>
+                    </table>
+                </details>
+                <hr>
+                <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
+                <div class="form-group">
+                    <label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label>
+                    <textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label>
+                    <textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea>
+                </div>
+            </fieldset>
+
             <fieldset>
                 <legend>SCHEDA 2 – UN PENSIERO SUL LAVORO</legend>
-                </fieldset>
+                <div class="form-group">
+                    <label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label>
+                    <textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label>
+                    <textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label>
+                    <textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label>
+                    <textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea>
+                </div>
+            </fieldset>
 
             <fieldset>
                 <legend>SCHEDA 3 – MODI DI LAVORARE</legend>
-
                 <div class="instruction-text">
                     <p>Esistono quattro principali modi diversi di lavorare; quasi tutte le professioni o i lavori si svolgono lavorando un po' in un modo un po' in un altro: in genere, però, prevalgono le caratteristiche di uno di questi modi.</p>
-                    <p><strong>... con la GENTE:</strong> quando si hanno frequenti o continui rapporti con molte persone (con i clienti, i pazienti, gli allievi...). Star bene con la gente ed avere facilità di rapporti con le persone è una caratteristica indispensabile per tanti professionisti diversi: gli insegnanti, i negozianti, i medici, i parrucchieri...</p>
-                    <p><strong>... con i DATI:</strong> quando si ha a che fare con la registrazione, il calcolo, l'elaborazione di dati statistici, dati anagrafici, dati di mercato, calcoli numerici... Lavorano con i dati soprattutto gli impiegati amministrativi, i ragionieri, i segretari, i ricercatori di mercato, gli economisti...</p>
-                    <p><strong>... con le IDEE:</strong> quando si producono concetti astratti, idee artistiche, scientifiche... o si riflette su di esse. In tutte le professioni si deve in qualche modo lavorare col cervello e quindi con le idee, ma certi lavori richiedono una capacità particolarmente sviluppata di riflettere, ragionare, inventare: è il caso, per esempio degli artisti, degli scienziati, dei filosofi...</p>
-                    <p><strong>... con le COSE:</strong> quando si debbono manipolare dei materiali o degli oggetti per produrre o riparare manufatti (materiali come il legno, il ferro, la stoffa... oggetti come l'automobile, la televisione...). Lavorano soprattutto con le cose gli agricoltori o gli artigiani come i sarti, i fabbri, i ceramisti, gli orafi...</p>
+                    <p><strong>... con la GENTE:</strong> quando si hanno frequenti o continui rapporti con molte persone (con i clienti, i pazienti, gli allievi...).</p>
+                    <p><strong>... con i DATI:</strong> quando si ha a che fare con la registrazione, il calcolo, l'elaborazione di dati statistici, dati anagrafici, dati di mercato, calcoli numerici...</p>
+                    <p><strong>... con le IDEE:</strong> quando si producono concetti astratti, idee artistiche, scientifiche... o si riflette su di esse.</p>
+                    <p><strong>... con le COSE:</strong> quando si debbono manipolare dei materiali o degli oggetti per produrre o riparare manufatti.</p>
                     <hr>
                     <p>Ora, prova a compilare il questionario seguente, indicando quali modalità senti più tue (ti potrebbero piacere di più, pensando a come sei fatto).</p>
                 </div>
-
-                <h4>QUESTIONARIO DI AUTOVALUTAZIONE</h4>
+                <h4 class="centered-subtitle">QUESTIONARIO DI AUTOVALUTAZIONE</h4>
                 <p>Segna con una crocetta le affermazioni che descrivono chi sei e i tuoi interessi.</p>
-                
                 <div class="autovalutazione-container">
                     <div class="lavoro-categoria">
                         <h5>LAVORARE CON LA GENTE</h5>
@@ -105,34 +186,28 @@
                         </div>
                     </div>
                 </div>
-
                 <hr>
                 <h4>RIEPILOGO PUNTEGGI</h4>
                 <table class="score-summary-table">
                     <tbody>
                         <tr>
-                            <td>LAVORARE CON LA GENTE:</td>
-                            <td><span id="punteggio-gente">0</span></td>
-                            <td>LAVORARE CON LE IDEE:</td>
-                            <td><span id="punteggio-idee">0</span></td>
+                            <td>LAVORARE CON LA GENTE:</td><td><span id="punteggio-gente">0</span></td>
+                            <td>LAVORARE CON LE IDEE:</td><td><span id="punteggio-idee">0</span></td>
                         </tr>
                         <tr>
-                            <td>LAVORARE CON I DATI:</td>
-                            <td><span id="punteggio-dati">0</span></td>
-                            <td>LAVORARE CON LE COSE:</td>
-                            <td><span id="punteggio-cose">0</span></td>
+                            <td>LAVORARE CON I DATI:</td><td><span id="punteggio-dati">0</span></td>
+                            <td>LAVORARE CON LE COSE:</td><td><span id="punteggio-cose">0</span></td>
                         </tr>
                     </tbody>
                 </table>
                 <hr>
-
                 <p class="instruction-text">Adesso, prova a riflettere, rispondendo a questa domanda:</p>
                 <div class="form-group">
                     <label for="scheda3_riflessione">Cosa hai capito di te? Quale potrebbe essere la modalità di lavorare migliore per te? (In pratica: come ti piacerebbe lavorare?)</label>
                     <textarea id="scheda3_riflessione" name="scheda3_riflessione" rows="5"></textarea>
                 </div>
-
             </fieldset>
+            
             <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
         </form>
         
