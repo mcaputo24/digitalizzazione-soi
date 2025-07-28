@@ -78,3 +78,60 @@ hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
     #cy, #map-controls { width: 100%; box-sizing: border-box; }
     #cy { height: 400px; }
 }
+/* Stili per Scheda 3 */
+.autovalutazione-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.lavoro-categoria h5 {
+    color: #c15c2d;
+    border-bottom: 2px solid #c15c2d;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 4px;
+    flex-shrink: 0; /* Impedisce al checkbox di rimpicciolirsi */
+}
+
+.score-summary-table {
+    width: 100%;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+}
+
+.score-summary-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.score-summary-table td:nth-child(odd) {
+    font-weight: 600;
+}
+
+.score-summary-table td:nth-child(even) {
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+    color: #005a87;
+}
+
+/* Adattamento per mobile della griglia della scheda 3 */
+@media (max-width: 600px) {
+    .autovalutazione-container {
+        grid-template-columns: 1fr;
+    }
+}
