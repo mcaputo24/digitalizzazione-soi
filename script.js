@@ -1,31 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    // Definizione delle viste
     const views = {
         home: document.getElementById('home-view'),
         questionnaire: document.getElementById('questionnaire-view'),
         login: document.getElementById('login-view'),
         dashboard: document.getElementById('dashboard-view')
     };
-
     let isQuestionnaireInitialized = false;
 
     function initializeQuestionnaire() {
         if (isQuestionnaireInitialized) return;
-        
-        // --- QUI INIZIA IL CODICE COMPLETO DEL QUESTIONARIO ---
+
         const controlsContent = document.getElementById('controls-content');
         let selectedNode = null;
         const cy = cytoscape({
             container: document.getElementById('cy'),
             elements: [ { data: { id: 'io_sono', label: 'IO SONO' }, position: { x: 300, y: 200 }, locked: true, classes: 'io-sono' } ],
             style: [
-                { selector: 'node', style: { 'label': 'data(label)', 'text-valign': 'center', 'color': '#fff', 'text-outline-width': 2, 'background-color': '#888', 'width': 'label', 'height': 'label', 'padding': '10px', 'shape': 'round-rectangle', 'text-wrap': 'wrap', 'text-max-width': '140px' } },
-                { selector: 'edge', style: { 'width': 3, 'line-color': '#ccc', 'target-arrow-color': '#ccc', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' } },
-                { selector: '.io-sono', style: { 'background-color': '#005a87', 'text-outline-color': '#005a87' } },
-                { selector: '.aggettivo', style: { 'background-color': '#c15c2d', 'text-outline-color': '#c15c2d' } },
-                { selector: '.attivita', style: { 'background-color': '#3a7d44', 'text-outline-color': '#3a7d44' } },
-                { selector: '.contesto', style: { 'background-color': '#5bc0de', 'text-outline-color': '#5bc0de', 'color': '#000' } },
-                { selector: ':selected', style: { 'border-width': 3, 'border-color': '#DAA520' } }
+                { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','color': '#fff','text-outline-width': 2,'background-color': '#888','width': 'label','height': 'label','padding': '10px','shape': 'round-rectangle','text-wrap': 'wrap','text-max-width': '140px' } },
+                { selector: 'edge', style: { 'width': 3,'line-color': '#ccc','target-arrow-color': '#ccc','target-arrow-shape': 'triangle','curve-style': 'bezier' } },
+                { selector: '.io-sono', style: { 'background-color': '#005a87','text-outline-color': '#005a87' } },
+                { selector: '.aggettivo', style: { 'background-color': '#c15c2d','text-outline-color': '#c15c2d' } },
+                { selector: '.attivita', style: { 'background-color': '#3a7d44','text-outline-color': '#3a7d44' } },
+                { selector: '.contesto', style: { 'background-color': '#5bc0de','text-outline-color': '#5bc0de','color': '#000' } },
+                { selector: ':selected', style: { 'border-width': 3,'border-color': '#DAA520' } }
             ],
             layout: { name: 'preset' }
         });
@@ -51,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function showDetailInput(type) {
-            const typeText = type === 'attivita' ? 'un\'attività' : 'un contesto';
+            const typeText = type === 'attivita' ? "un'attività" : 'un contesto';
             controlsContent.innerHTML = `<h4>Aggiungi ${typeText}</h4><div class="form-group"><label for="new-detail-text">Testo:</label><input type="text" id="new-detail-text" placeholder="Es. Suono la chitarra"></div><button type="button" id="confirm-detail-btn">Conferma</button><button type="button" id="cancel-detail-btn">Annulla</button>`;
             document.getElementById('confirm-detail-btn').addEventListener('click', () => addDetailNode(type));
             document.getElementById('cancel-detail-btn').addEventListener('click', () => renderDetailControls(selectedNode));
@@ -128,20 +126,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.disabled = false; submitButton.textContent = 'Invia e Salva i Dati';
             }
         });
+
         document.getElementById('download-pdf-btn').addEventListener('click', () => {
-            // Logica PDF...
+             const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            // ... (codice generazione PDF completo)
+            doc.save(`Riepilogo_SOI_${savedData.cognome || 'Studente'}_${savedData.nome || ''}.pdf`);
         });
+        
         isQuestionnaireInitialized = true;
     }
 
-    // --- ROUTER E LOGICA DI AUTENTICAZIONE ---
+    async function initializeDashboard() {
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+        const container = document.getElementById('student-list-container');
+        container.innerHTML = '<p>Caricamento studenti in corso...</p>';
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch('/.netlify/functions/get-student-data', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
+            }
+            const students = await response.json();
+            renderStudentTable(students);
+        } catch (error) {
+            container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
+            console.error(error);
+        }
+    }
+
+    function renderStudentTable(students) {
+        const container = document.getElementById('student-list-container');
+        if (students.length === 0) {
+            container.innerHTML = '<p>Nessuno studente ha ancora compilato il questionario.</p>';
+            return;
+        }
+        let tableHTML = '<table class="student-table"><thead><tr><th>Cognome</th><th>Nome</th><th>Classe</th><th>Data Compilazione</th><th>Azioni</th></tr></thead><tbody>';
+        students.forEach(student => {
+            tableHTML += `<tr><td>${student.cognome}</td><td>${student.nome}</td><td>${student.classe}</td><td>${student.data}</td><td><button class="details-btn" data-id="${student.id}">Vedi Dettagli</button></td></tr>`;
+        });
+        tableHTML += '</tbody></table>';
+        container.innerHTML = tableHTML;
+    }
+
     function handleRouteChange() {
         const hash = window.location.hash;
         Object.values(views).forEach(view => { if (view) view.style.display = 'none'; });
         const user = firebase.auth().currentUser;
-
         if (hash.startsWith('#/docente/dashboard')) {
-            if (user) { views.dashboard.style.display = 'block'; } 
+            if (user) { views.dashboard.style.display = 'block'; initializeDashboard(); } 
             else { window.location.hash = '#/docente/login'; }
         } else if (hash.startsWith('#/docente/login')) {
             views.login.style.display = 'block';
@@ -156,22 +193,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const logoutBtn = document.getElementById('logout-btn');
     const loginError = document.getElementById('login-error');
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        loginError.style.display = 'none';
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(userCredential => { window.location.hash = '#/docente/dashboard'; })
-            .catch(error => {
-                loginError.textContent = "Credenziali non valide. Riprova.";
-                loginError.style.display = 'block';
-            });
-    });
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            if(loginError) loginError.style.display = 'none';
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(userCredential => { window.location.hash = '#/docente/dashboard'; })
+                .catch(error => {
+                    if(loginError) {
+                        loginError.textContent = "Credenziali non valide. Riprova.";
+                        loginError.style.display = 'block';
+                    }
+                });
+        });
+    }
 
-    logoutBtn.addEventListener('click', () => {
-        firebase.auth().signOut().then(() => { window.location.hash = '#/'; });
-    });
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            firebase.auth().signOut().then(() => { window.location.hash = '#/'; });
+        });
+    }
 
     firebase.auth().onAuthStateChanged(user => { handleRouteChange(); });
     window.addEventListener('hashchange', handleRouteChange);
