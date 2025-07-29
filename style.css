@@ -7,21 +7,9 @@ legend { font-size: 1.8em; font-weight: bold; color: #005a87; padding-right: 10p
 hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 8px; }
-.form-group input[type="text"], .form-group input[type="date"], .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.form-group input[type="text"]:focus, .form-group input[type="date"]:focus, .form-group textarea:focus {
-    border-color: #005a87;
-    box-shadow: 0 0 0 2px rgba(0, 90, 135, 0.2);
-    outline: none;
-}
+.form-group input[type="text"], .form-group input[type="date"], .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s; }
+.form-group input[type="text"]:focus, .form-group input[type="date"]:focus, .form-group textarea:focus { border-color: #005a87; box-shadow: 0 0 0 2px rgba(0, 90, 135, 0.2); outline: none; }
 .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.grid-inputs input { width: 100%; }
 .instruction-text { font-size: 1.1em; color: #555; line-height: 1.6; }
 .image-container { text-align: center; margin-bottom: 20px; }
 .image-container img { max-width: 100%; border: 1px solid #ccc; padding: 5px; margin-top: 10px; border-radius: 8px; }
@@ -29,159 +17,33 @@ hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
 #cy { width: 65%; height: 500px; border: 1px solid #ccc; border-radius: 8px; }
 #map-controls { width: 35%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
 #map-controls h3 { margin-top: 0; text-align: center; color: #005a87; }
-#map-controls button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
+#map-controls button { width: 100%; margin-top: 15px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: background-color 0.2s; }
 #map-controls button:hover { background-color: #0069d9; }
 .delete-btn { background-color: #dc3545 !important; }
 .delete-btn:hover { background-color: #c82333 !important; }
-.suggestions-container summary {
-    cursor: pointer;
-    font-weight: 600;
-    color: #005a87;
-    padding: 10px;
-    border-radius: 6px;
-    background-color: #eef5f9;
-    transition: background-color 0.2s;
-    list-style: none; /* Rimuove la freccia di default */
-}
-.suggestions-container summary::-webkit-details-marker { display: none; } /* Rimuove la freccia su Chrome */
+.suggestions-container summary { cursor: pointer; font-weight: 600; color: #005a87; padding: 10px; border-radius: 6px; background-color: #eef5f9; transition: background-color 0.2s; list-style: none; }
+.suggestions-container summary::-webkit-details-marker { display: none; }
 .suggestions-container summary:before { content: '▶ '; }
 .suggestions-container[open] summary:before { content: '▼ '; }
 .suggestions-container[open] { padding: 15px; border: 1px solid #eef5f9; border-radius: 6px; }
 .suggestions-container table { width: 100%; margin-top: 15px; border-collapse: collapse; }
 .suggestions-container th { background-color: #005a87; color: white; padding: 8px; text-align: left; }
 .suggestions-container td { padding: 8px; border: 1px solid #ddd; }
-.submit-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    font-size: 1.2em;
-    font-weight: bold;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-@media (max-width: 768px) {
-    .map-section { flex-direction: column; }
-    #cy, #map-controls { width: 100%; box-sizing: border-box; }
-    #cy { height: 400px; }
-}
-/* Stili per Scheda 3 */
-.autovalutazione-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-.lavoro-categoria h5 {
-    color: #c15c2d;
-    border-bottom: 2px solid #c15c2d;
-    padding-bottom: 5px;
-    margin-top: 0;
-}
-
-.checkbox-group label {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    font-size: 0.95em;
-    line-height: 1.4;
-}
-
-.checkbox-group input[type="checkbox"] {
-    margin-right: 10px;
-    margin-top: 4px;
-    flex-shrink: 0; /* Impedisce al checkbox di rimpicciolirsi */
-}
-
-.score-summary-table {
-    width: 100%;
-    margin-top: 15px;
-    border: 1px solid #ddd;
-    border-collapse: collapse;
-}
-
-.score-summary-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-}
-
-.score-summary-table td:nth-child(odd) {
-    font-weight: 600;
-}
-
-.score-summary-table td:nth-child(even) {
-    font-weight: bold;
-    font-size: 1.2em;
-    text-align: center;
-    color: #005a87;
-}
-
-/* Adattamento per mobile della griglia della scheda 3 */
-@media (max-width: 600px) {
-    .autovalutazione-container {
-        grid-template-columns: 1fr;
-    }
-}
-/* Stile per centrare il sottotitolo del questionario */
-.centered-subtitle {
-    text-align: center;
-    color: #333;
-    font-size: 1.3em;
-}
-/* Stili per la nuova schermata di scelta */
-.choice-box {
-    text-align: center;
-    padding: 40px;
-    margin: 20px auto;
-    max-width: 600px;
-}
-
-.choice-box h2 {
-    color: #005a87;
-}
-
-.choice-button {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin: 15px 0;
-    box-sizing: border-box;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    background-color: #007bff;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-}
-
-.choice-button:hover {
-    background-color: #0069d9;
-}
-
-.choice-button.disabled {
-    background-color: #a0a0a0;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.questionnaire-subtitle {
-    text-align: center;
-    font-size: 1.2em;
-    color: #555;
-    margin-top: -10px;
-    margin-bottom: 20px;
-}
+.submit-btn { display: block; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; background-color: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; }
+.choice-box { text-align: center; padding: 40px; margin: 20px auto; max-width: 600px; }
+.choice-box h2 { color: #005a87; }
+.choice-button { display: block; width: 100%; padding: 15px; margin: 15px 0; box-sizing: border-box; font-size: 1.2em; font-weight: bold; text-decoration: none; color: white; background-color: #007bff; border-radius: 8px; transition: background-color 0.2s; }
+.choice-button:hover { background-color: #0069d9; }
+.choice-button.disabled { background-color: #a0a0a0; cursor: not-allowed; opacity: 0.7; }
+.questionnaire-subtitle { text-align: center; font-size: 1.2em; color: #555; margin-top: -10px; margin-bottom: 20px; }
+.centered-subtitle { text-align: center; color: #333; font-size: 1.3em; }
+.autovalutazione-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.lavoro-categoria h5 { color: #c15c2d; border-bottom: 2px solid #c15c2d; padding-bottom: 5px; margin-top: 0; }
+.checkbox-group label { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 0.95em; line-height: 1.4; }
+.checkbox-group input[type="checkbox"] { margin-right: 10px; margin-top: 4px; flex-shrink: 0; }
+.score-summary-table { width: 100%; margin-top: 15px; border: 1px solid #ddd; border-collapse: collapse; }
+.score-summary-table td { padding: 12px; border: 1px solid #ddd; }
+.score-summary-table td:nth-child(odd) { font-weight: 600; }
+.score-summary-table td:nth-child(even) { font-weight: bold; font-size: 1.2em; text-align: center; color: #005a87; }
+@media (max-width: 768px) { .map-section { flex-direction: column; } #cy, #map-controls { width: 100%; box-sizing: border-box; } #cy { height: 400px; } }
+@media (max-width: 600px) { .autovalutazione-container { grid-template-columns: 1fr; } }
