@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- ROUTER: GESTIONE DELLE VISTE ---
+    const views = {
+        home: document.getElementById('home-view'),
+        questionnaire: document.getElementById('questionnaire-view')
+        // In futuro: login: document.getElementById('login-view'), etc.
+    };
+
+    function handleRouteChange() {
+        const hash = window.location.hash;
+        
+        // Nascondi tutte le viste
+        Object.values(views).forEach(view => view.style.display = 'none');
+
+        // Mostra la vista corretta in base all'URL
+        if (hash.startsWith('#/studente/anno-1')) {
+            views.questionnaire.style.display = 'block';
+        } else {
+            views.home.style.display = 'block';
+        }
+    }
+    
+    // Gestisce il cambio di URL e il caricamento iniziale
+    window.addEventListener('hashchange', handleRouteChange);
+    handleRouteChange(); // Esegui al primo caricamento
+
+document.addEventListener('DOMContentLoaded', () => {
     const controlsContent = document.getElementById('controls-content');
     let selectedNode = null;
 

@@ -141,3 +141,47 @@ hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
     color: #333;
     font-size: 1.3em;
 }
+/* Stili per la nuova schermata di scelta */
+.choice-box {
+    text-align: center;
+    padding: 40px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.choice-box h2 {
+    color: #005a87;
+}
+
+.choice-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    box-sizing: border-box;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.choice-button:hover {
+    background-color: #0069d9;
+}
+
+.choice-button.disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.questionnaire-subtitle {
+    text-align: center;
+    font-size: 1.2em;
+    color: #555;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
