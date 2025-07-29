@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digitalizzazione SOI - Questionario</title>
     <link rel="stylesheet" href="style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
 </head>
@@ -21,7 +25,7 @@
                 <p>Seleziona il percorso che vuoi iniziare:</p>
                 <a href="#/studente/anno-1" class="choice-button">Questionario Studente (I Anno)</a>
                 <a href="#/studente/anno-2-3" class="choice-button disabled">Questionario Studente (II e III Anno) - Prossimamente</a>
-                <a href="#/docente/login" class="choice-button disabled">Accesso Docente - Prossimamente</a>
+                <a href="#/docente/login" class="choice-button">Accesso Docente</a>
             </div>
         </div>
 
@@ -30,45 +34,25 @@
             <form id="soi-form">
                 <fieldset>
                     <legend>Dati dello Studente</legend>
-                    <div class="form-group">
-                        <label for="nome">Nome:</label>
-                        <input type="text" id="nome" name="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cognome">Cognome:</label>
-                        <input type="text" id="cognome" name="cognome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="classe">Classe:</label>
-                        <input type="text" id="classe" name="classe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="data">Data:</label>
-                        <input type="date" id="data" name="data" required>
-                    </div>
+                    <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" required></div>
+                    <div class="form-group"><label for="cognome">Cognome:</label><input type="text" id="cognome" name="cognome" required></div>
+                    <div class="form-group"><label for="classe">Classe:</label><input type="text" id="classe" name="classe" required></div>
+                    <div class="form-group"><label for="data">Data:</label><input type="date" id="data" name="data" required></div>
                 </fieldset>
                 <fieldset>
                     <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
                     <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
                     <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
-                    <div class="grid-inputs">
-                        <input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10.">
-                    </div>
+                    <div class="grid-inputs"><input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10."></div>
                     <hr>
                     <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
-                    <div class="image-container">
-                        <p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale">
-                    </div>
+                    <div class="image-container"><p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale"></div>
                     <div class="map-section">
                         <div id="cy"></div>
-                        <div id="map-controls">
-                            <h3>Pannello di Controllo</h3>
-                            <div id="controls-content"></div>
-                        </div>
+                        <div id="map-controls"><h3>Pannello di Controllo</h3><div id="controls-content"></div></div>
                     </div>
                     <hr>
-                    <details class="suggestions-container">
-                        <summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
+                    <details class="suggestions-container"><summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
                         <table>
                             <thead><tr><th>CARATTERISTICHE PERSONALI</th></tr></thead>
                             <tbody>
@@ -90,33 +74,15 @@
                     </details>
                     <hr>
                     <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
-                    <div class="form-group">
-                        <label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label>
-                        <textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label>
-                        <textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea>
-                    </div>
+                    <div class="form-group"><label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label><textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea></div>
+                    <div class="form-group"><label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label><textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea></div>
                 </fieldset>
                 <fieldset>
                     <legend>SCHEDA 2 – UN PENSIERO SUL LAVORO</legend>
-                    <div class="form-group">
-                        <label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label>
-                        <textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label>
-                        <textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label>
-                        <textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label>
-                        <textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea>
-                    </div>
+                    <div class="form-group"><label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label><textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea></div>
+                    <div class="form-group"><label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label><textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea></div>
+                    <div class="form-group"><label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label><textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea></div>
+                    <div class="form-group"><label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label><textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea></div>
                 </fieldset>
                 <fieldset>
                     <legend>SCHEDA 3 – MODI DI LAVORARE</legend>
@@ -230,7 +196,39 @@
                 <button id="download-pdf-btn">Scarica il Riepilogo in PDF</button>
             </div>
         </div>
+        
+        <div id="login-view" class="view" style="display: none;">
+            <form id="login-form" class="auth-form">
+                <h2>Accesso Area Riservata Docente</h2>
+                <div class="form-group"><label for="login-email">Email:</label><input type="email" id="login-email" required></div>
+                <div class="form-group"><label for="login-password">Password:</label><input type="password" id="login-password" required></div>
+                <button type="submit" class="submit-btn">Accedi</button>
+                <p id="login-error" class="error-message" style="display:none;"></p>
+            </form>
+        </div>
+
+        <div id="dashboard-view" class="view" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Dashboard Docente</h2>
+                <button id="logout-btn" class="logout-btn">Esci</button>
+            </div>
+            <p>Benvenuto/a nell'area riservata. Da qui potrai visualizzare i risultati degli studenti e compilare le schede del conduttore.</p>
+        </div>
     </main>
+
+    <script>
+      // Configurazione di Firebase (come da te fornita)
+      const firebaseConfig = {
+        apiKey: "AIzaSyD05kBg5aIs663s6Ma9abLj6_vmh9O_R9k",
+        authDomain: "digitalizzazione-soi.firebaseapp.com",
+        projectId: "digitalizzazione-soi",
+        storageBucket: "digitalizzazione-soi.firebasestorage.app",
+        messagingSenderId: "619321139714",
+        appId: "1:619321139714:web:d223ced5217cabcd49bd1b"
+      };
+      // Inizializza Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
