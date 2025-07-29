@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definizione delle viste
+    // Definizione delle viste (con l'aggiunta di studentDetail)
     const views = {
         home: document.getElementById('home-view'),
         questionnaire: document.getElementById('questionnaire-view'),
         login: document.getElementById('login-view'),
-        dashboard: document.getElementById('dashboard-view')
+        dashboard: document.getElementById('dashboard-view'),
+        studentDetail: document.getElementById('student-detail-view') // Aggiunta
     };
     let isQuestionnaireInitialized = false;
 
@@ -161,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderStudentTable(students) {
         const container = document.getElementById('student-list-container');
+        if (!container) return;
         if (students.length === 0) {
             container.innerHTML = '<p>Nessuno studente ha ancora compilato il questionario.</p>';
             return;
@@ -171,13 +173,89 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         tableHTML += '</tbody></table>';
         container.innerHTML = tableHTML;
+        
+        // Aggiungi l'event listener qui, dopo aver creato la tabella
+        container.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('details-btn')) {
+                const studentId = event.target.dataset.id;
+                window.location.hash = `#/docente/studente/${studentId}`;
+            }
+        });
+    }
+
+    async function initializeStudentDetailView(studentId) {
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+        const contentDiv = document.getElementById('student-detail-content');
+        const title = document.getElementById('student-name-title');
+        title.textContent = "Caricamento Dettaglio...";
+        contentDiv.innerHTML = '<p>Caricamento dati in corso...</p>';
+
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch('/.netlify/functions/get-single-student-data', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studentId })
+            });
+            if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
+            
+            const data = await response.json();
+            title.textContent = `Dettaglio per: ${data.nome} ${data.cognome}`;
+            
+            // Funzione per mostrare i dati in modo pulito
+            const renderField = (label, value) => `<p><strong>${label}:</strong> ${value || 'Non specificato'}</p>`;
+
+            let html = `
+                <div class="student-data-section">
+                    <h4>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</h4>
+                    ${renderField('10 Aggettivi', [...Array(10).keys()].map(i => data[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}
+                    ${renderField('Attività preferite', data.scheda1_attivita_preferite)}
+                    ${renderField('Preferenze scolastiche', data.scheda1_preferenze_scolastiche)}
+                </div>
+                <div class="student-data-section">
+                    <h4>SCHEDA 2 – UN PENSIERO SUL LAVORO</h4>
+                    ${renderField('Cosa è il lavoro', data.scheda2_cosa_e_lavoro)}
+                    ${renderField('Perché le persone lavorano', data.scheda2_perche_si_lavora)}
+                    ${renderField('Se nessuno lavorasse', data.scheda2_se_nessuno_lavorasse)}
+                    ${renderField('Se penso al lavoro, mi sento...', data.scheda2_come_mi_sento)}
+                </div>
+                 <div class="student-data-section">
+                    <h4>SCHEDA 3 – MODI DI LAVORARE</h4>
+                    ${renderField('Riflessione', data.scheda3_riflessione)}
+                </div>
+                 <div class="student-data-section">
+                    <h4>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</h4>
+                    ${renderField('Lavori desiderati', data.scheda4_lavori_desiderati)}
+                    ${renderField('Immaginario sul lavoro', data.scheda4_immaginario_lavoro)}
+                    ${renderField('Motivazioni', data.scheda4_motivazioni)}
+                    ${renderField('Desideri e sogni', data.scheda4_desideri_sogni)}
+                    ${renderField('Ispirazione', data.scheda4_ispirazione)}
+                    ${renderField('Modo di studiare', data.scheda4_modo_studiare)}
+                </div>
+            `;
+            contentDiv.innerHTML = html;
+
+        } catch (error) {
+            title.textContent = "Errore";
+            contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
+        }
     }
 
     function handleRouteChange() {
         const hash = window.location.hash;
         Object.values(views).forEach(view => { if (view) view.style.display = 'none'; });
         const user = firebase.auth().currentUser;
-        if (hash.startsWith('#/docente/dashboard')) {
+
+        if (hash.startsWith('#/docente/studente/')) {
+            if (user) {
+                const studentId = hash.split('/')[3];
+                if(views.studentDetail) {
+                    views.studentDetail.style.display = 'block';
+                    initializeStudentDetailView(studentId);
+                }
+            } else { window.location.hash = '#/docente/login'; }
+        } else if (hash.startsWith('#/docente/dashboard')) {
             if (user) { views.dashboard.style.display = 'block'; initializeDashboard(); } 
             else { window.location.hash = '#/docente/login'; }
         } else if (hash.startsWith('#/docente/login')) {
