@@ -14,18 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modal-body');
     const closeModalBtn = document.querySelector('.close-modal-btn');
 
-    function openModal(content) {
-        if(modalBody) modalBody.innerHTML = content;
-        if(modalContainer) modalContainer.style.display = 'flex';
+    function openModal(content, onOpenCallback) {
+        if (modalBody) modalBody.innerHTML = content;
+        if (modalContainer) modalContainer.style.display = 'flex';
+        if (typeof onOpenCallback === 'function') {
+            onOpenCallback();
+        }
     }
 
     function closeModal() {
-        if(modalContainer) modalContainer.style.display = 'none';
-        if(modalBody) modalBody.innerHTML = '';
+        if (modalContainer) modalContainer.style.display = 'none';
+        if (modalBody) modalBody.innerHTML = '';
     }
 
-    if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-    if(modalContainer) modalContainer.addEventListener('click', function(event) {
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (modalContainer) modalContainer.addEventListener('click', function(event) {
         if (event.target === modalContainer) {
             closeModal();
         }
@@ -37,23 +40,80 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3>Fase 1: Griglia di Osservazione Classe</h3>
             <p>Inserire le annotazioni più rilevanti prese durante l’osservazione.</p>
             <form id="fase1-form">
-                <div class="form-group"><label>Note su Scheda 1 (Mappa di sé):</label><textarea name="note_scheda1" rows="3"></textarea></div>
-                <div class="form-group"><label>Note su Scheda 2 (Pensiero sul lavoro):</label><textarea name="note_scheda2" rows="3"></textarea></div>
-                <div class="form-group"><label>Note su Scheda 3 (Modi di lavorare):</label><textarea name="note_scheda3" rows="3"></textarea></div>
-                <div class="form-group"><label>Note su Scheda 4 (Tutte le strade):</label><textarea name="note_scheda4" rows="3"></textarea></div>
-                <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
+                <div class="teacher-form-section">
+                    <h4>Note su Scheda 1 (Mappa di sé)</h4>
+                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2"></textarea></div>
+                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s1_processo_decisionale" rows="2"></textarea></div>
+                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s1_visione_futura" rows="2"></textarea></div>
+                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s1_organizzazione" rows="2"></textarea></div>
+                </div>
+                <div class="teacher-form-section">
+                    <h4>Note su Scheda 2 (Pensiero sul lavoro)</h4>
+                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s2_autoconsapevolezza" rows="2"></textarea></div>
+                    <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s2_conoscenza_lavoro" rows="2"></textarea></div>
+                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s2_visione_futura" rows="2"></textarea></div>
+                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s2_organizzazione" rows="2"></textarea></div>
+                </div>
+                <div class="teacher-form-section">
+                    <h4>Note su Scheda 3 (Modi di lavorare)</h4>
+                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s3_autoconsapevolezza" rows="2"></textarea></div>
+                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s3_processo_decisionale" rows="2"></textarea></div>
+                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s3_visione_futura" rows="2"></textarea></div>
+                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s3_organizzazione" rows="2"></textarea></div>
+                </div>
+                <div class="teacher-form-section">
+                    <h4>Note su Scheda 4 (Tutte le strade)</h4>
+                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s4_autoconsapevolezza" rows="2"></textarea></div>
+                    <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s4_conoscenza_lavoro" rows="2"></textarea></div>
+                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s4_processo_decisionale" rows="2"></textarea></div>
+                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2"></textarea></div>
+                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2"></textarea></div>
+                </div>
+                <button type="submit" class="submit-btn" disabled>Salva Griglia (da attivare)</button>
             </form>
         `;
     }
 
-    function getPhase2FormHTML(studentId) {
-        // Qui andrà la tabella completa della Fase 2
+    function getPhase2FormHTML(studentId, studentName) {
         return `
-            <h3>Fase 2: Scheda di Sintesi Individuale</h3>
-            <p>Compilare la scheda indicando per ogni dimensione se è "Presente" o "Da potenziare".</p>
+            <h3>Fase 2: Scheda di Sintesi per ${studentName}</h3>
+            <p>Indicare per ogni dimensione se è "Presente" o "Da potenziare".</p>
             <form id="fase2-form" data-studentid="${studentId}">
-                <p>La tabella di valutazione per lo studente con ID: ${studentId} apparirà qui.</p>
-                <button type="submit" class="submit-btn">Salva Sintesi Fase 2</button>
+                <table class="evaluation-table">
+                    <thead><tr><th>SCHEDE</th><th>DIMENSIONI</th><th>Presente</th><th>Da potenziare</th></tr></thead>
+                    <tbody>
+                        <tr><td rowspan="4">Scheda 1</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s1_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s1_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr>
+                        <tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s1_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s1_proc" value="potenziare" data-dim="processo_decisionale"></td></tr>
+                        <tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s1_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s1_visi" value="potenziare" data-dim="visione_futura"></td></tr>
+                        <tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s1_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s1_orga" value="potenziare" data-dim="organizzazione"></td></tr>
+                        <tr><td rowspan="4">Scheda 2</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s2_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s2_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr>
+                        <tr><td>Conoscenza mondo lavoro</td><td class="check-cell"><input type="radio" name="f2_s2_cono" value="presente" data-dim="conoscenza_lavoro"></td><td class="check-cell"><input type="radio" name="f2_s2_cono" value="potenziare" data-dim="conoscenza_lavoro"></td></tr>
+                        <tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s2_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s2_visi" value="potenziare" data-dim="visione_futura"></td></tr>
+                        <tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s2_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s2_orga" value="potenziare" data-dim="organizzazione"></td></tr>
+                        <tr><td rowspan="4">Scheda 3</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s3_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s3_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr>
+                        <tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s3_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s3_proc" value="potenziare" data-dim="processo_decisionale"></td></tr>
+                        <tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s3_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s3_visi" value="potenziare" data-dim="visione_futura"></td></tr>
+                        <tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s3_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s3_orga" value="potenziare" data-dim="organizzazione"></td></tr>
+                        <tr><td rowspan="5">Scheda 4</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s4_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s4_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr>
+                        <tr><td>Conoscenza mondo lavoro</td><td class="check-cell"><input type="radio" name="f2_s4_cono" value="presente" data-dim="conoscenza_lavoro"></td><td class="check-cell"><input type="radio" name="f2_s4_cono" value="potenziare" data-dim="conoscenza_lavoro"></td></tr>
+                        <tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s4_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s4_proc" value="potenziare" data-dim="processo_decisionale"></td></tr>
+                        <tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s4_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s4_visi" value="potenziare" data-dim="visione_futura"></td></tr>
+                        <tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s4_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s4_orga" value="potenziare" data-dim="organizzazione"></td></tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h4>Sintesi per Dimensione (calcolata automaticamente)</h4>
+                <table class="evaluation-table summary-table">
+                    <thead><tr><th>DIMENSIONI</th><th>PRESENTE</th><th>DA POTENZIARE</th><th>RISULTATO GENERALE</th></tr></thead>
+                    <tbody>
+                        <tr><td>Autoconsapevolezza</td><td><input id="sum_auto_p" disabled> / 4</td><td><input id="sum_auto_d" disabled> / 4</td><td><input id="res_auto" disabled></td></tr>
+                        <tr><td>Conoscenza mondo lavoro</td><td><input id="sum_cono_p" disabled> / 2</td><td><input id="sum_cono_d" disabled> / 2</td><td><input id="res_cono" disabled></td></tr>
+                        <tr><td>Processo decisionale</td><td><input id="sum_proc_p" disabled> / 3</td><td><input id="sum_proc_d" disabled> / 3</td><td><input id="res_proc" disabled></td></tr>
+                        <tr><td>Visione futura</td><td><input id="sum_visi_p" disabled> / 4</td><td><input id="sum_visi_d" disabled> / 4</td><td><input id="res_visi" disabled></td></tr>
+                        <tr><td>Organizzazione</td><td><input id="sum_orga_p" disabled> / 4</td><td><input id="sum_orga_d" disabled> / 4</td><td><input id="res_orga" disabled></td></tr>
+                    </tbody>
+                </table>
+                <button type="submit" class="submit-btn" disabled>Salva Sintesi (da attivare)</button>
             </form>
         `;
     }
@@ -68,12 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
                 <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
                 <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
-                <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
+                <button type="submit" class="submit-btn" disabled>Salva Sintesi (da attivare)</button>
             </form>
         `;
     }
 
-    // --- Logica Questionario Studente ---
     function initializeQuestionnaire() {
         if (isQuestionnaireInitialized) return;
         const controlsContent = document.getElementById('controls-content');
@@ -202,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isQuestionnaireInitialized = true;
     }
 
-    // --- Logica Dashboard e Dettaglio ---
     async function initializeDashboard() {
         const user = firebase.auth().currentUser;
         if (!user) return;
@@ -237,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let tableHTML = '<table class="student-table"><thead><tr><th>Cognome</th><th>Nome</th><th>Classe</th><th>Data Compilazione</th><th>Azioni</th></tr></thead><tbody>';
         students.forEach(student => {
-            tableHTML += `<tr><td>${student.cognome}</td><td>${student.nome}</td><td>${student.classe}</td><td>${student.data}</td><td><button class="details-btn" data-id="${student.id}">Vedi Dettagli</button></td></tr>`;
+            tableHTML += `<tr><td>${student.cognome}</td><td>${student.nome}</td><td>${student.classe}</td><td>${student.data}</td><td><button class="details-btn" data-id="${student.id}" data-name="${student.nome} ${student.cognome}">Vedi Dettagli</button></td></tr>`;
         });
         tableHTML += '</tbody></table>';
         container.innerHTML = tableHTML;
@@ -245,22 +303,19 @@ document.addEventListener('DOMContentLoaded', () => {
         container.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('details-btn')) {
                 const studentId = event.target.dataset.id;
-                window.location.hash = `#/docente/studente/${studentId}`;
+                const studentName = event.target.dataset.name;
+                window.location.hash = `#/docente/studente/${studentId}/${encodeURIComponent(studentName)}`;
             }
         });
     }
 
     function renderMapDataAsText(mapData) {
-        if (!mapData || !mapData.elements || !mapData.elements.nodes) {
-            return '<p><strong>Riepilogo Mappa:</strong> Nessun dato presente nella mappa.</p>';
-        }
+        if (!mapData || !mapData.elements || !mapData.elements.nodes) { return '<p><strong>Riepilogo Mappa:</strong> Nessun dato presente nella mappa.</p>';}
         let html = '<div><strong>Riepilogo Mappa Interattiva:</strong><ul>';
         const nodes = mapData.elements.nodes;
         const edges = mapData.elements.edges;
         const aggettivoNodes = nodes.filter(n => n.classes && n.classes.includes('aggettivo'));
-        if (aggettivoNodes.length === 0) {
-            return '<p><strong>Riepilogo Mappa:</strong> Nessun aggettivo inserito nella mappa.</p>';
-        }
+        if (aggettivoNodes.length === 0) { return '<p><strong>Riepilogo Mappa:</strong> Nessun aggettivo inserito nella mappa.</p>';}
         aggettivoNodes.forEach(aggettivo => {
             html += `<li><strong>${aggettivo.data.label}</strong><ul>`;
             const connectedEdges = edges.filter(e => e.data.source === aggettivo.data.id);
@@ -272,21 +327,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         html += `<li><em>${type}:</em> ${targetNode.data.label}</li>`;
                     }
                 });
-            } else {
-                 html += `<li>Nessun dettaglio collegato.</li>`;
-            }
+            } else { html += `<li>Nessun dettaglio collegato.</li>`; }
             html += `</ul></li>`;
         });
         html += '</ul></div>';
         return html;
     }
 
-    async function initializeStudentDetailView(studentId) {
+    async function initializeStudentDetailView(studentId, studentName) {
         const user = firebase.auth().currentUser;
         if (!user) return;
         const contentDiv = document.getElementById('student-detail-content');
         const title = document.getElementById('student-name-title');
-        title.textContent = "Caricamento Dettaglio...";
+        title.textContent = `Dettaglio per: ${decodeURIComponent(studentName)}`;
         contentDiv.innerHTML = '<p>Caricamento dati in corso...</p>';
         try {
             const token = await user.getIdToken();
@@ -298,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
             
             const data = await response.json();
-            title.textContent = `Dettaglio per: ${data.nome} ${data.cognome}`;
             
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
@@ -333,12 +385,45 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             contentDiv.innerHTML = html;
             
-            document.getElementById('show-fase2-btn')?.addEventListener('click', () => openModal(getPhase2FormHTML(studentId)));
-
+            document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
+                openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName)), () => {
+                    attachPhase2Calculators(); 
+                });
+            });
         } catch (error) {
             title.textContent = "Errore";
             contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
         }
+    }
+
+    function attachPhase2Calculators() {
+        const form = document.getElementById('fase2-form');
+        if (!form) return;
+        const dimensions = {
+            autoconsapevolezza: { p: 0, d: 0, total: 4, id: 'auto' },
+            conoscenza_lavoro: { p: 0, d: 0, total: 2, id: 'cono' },
+            processo_decisionale: { p: 0, d: 0, total: 3, id: 'proc' },
+            visione_futura: { p: 0, d: 0, total: 4, id: 'visi' },
+            organizzazione: { p: 0, d: 0, total: 4, id: 'orga' }
+        };
+        form.addEventListener('change', (e) => {
+            if (e.target.type === 'radio') {
+                Object.values(dimensions).forEach(dim => { dim.p = 0; dim.d = 0; });
+                const checkedRadios = form.querySelectorAll('input[type="radio"]:checked');
+                checkedRadios.forEach(radio => {
+                    const dim = radio.dataset.dim;
+                    if (radio.value === 'presente') { dimensions[dim].p++; } 
+                    else if (radio.value === 'potenziare') { dimensions[dim].d++; }
+                });
+                Object.values(dimensions).forEach(dim => {
+                    document.getElementById(`sum_${dim.id}_p`).value = dim.p;
+                    document.getElementById(`sum_${dim.id}_d`).value = dim.d;
+                    let result = '';
+                    if ((dim.p + dim.d) > 0) { result = (dim.p >= dim.d) ? 'PRESENTE' : 'DA POTENZIARE';}
+                    document.getElementById(`res_${dim.id}`).value = result;
+                });
+            }
+        });
     }
 
     function handleRouteChange() {
@@ -348,10 +433,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (hash.startsWith('#/docente/studente/')) {
             if (user) {
-                const studentId = hash.split('/')[3];
+                const parts = hash.split('/');
+                const studentId = parts[3];
+                const studentName = parts[4] || '';
                 if(views.studentDetail) {
                     views.studentDetail.style.display = 'block';
-                    initializeStudentDetailView(studentId);
+                    initializeStudentDetailView(studentId, studentName);
                 }
             } else { window.location.hash = '#/docente/login'; }
         } else if (hash.startsWith('#/docente/dashboard')) {
