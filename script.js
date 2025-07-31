@@ -9,9 +9,73 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isQuestionnaireInitialized = false;
 
+    // --- LOGICA FINESTRA MODALE ---
+    const modalContainer = document.getElementById('modal-container');
+    const modalBody = document.getElementById('modal-body');
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+
+    function openModal(content) {
+        if(modalBody) modalBody.innerHTML = content;
+        if(modalContainer) modalContainer.style.display = 'flex';
+    }
+
+    function closeModal() {
+        if(modalContainer) modalContainer.style.display = 'none';
+        if(modalBody) modalBody.innerHTML = '';
+    }
+
+    if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if(modalContainer) modalContainer.addEventListener('click', function(event) {
+        if (event.target === modalContainer) {
+            closeModal();
+        }
+    });
+
+    // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE ---
+    function getPhase1FormHTML() {
+        return `
+            <h3>Fase 1: Griglia di Osservazione Classe</h3>
+            <p>Inserire le annotazioni più rilevanti prese durante l’osservazione.</p>
+            <form id="fase1-form">
+                <div class="form-group"><label>Note su Scheda 1 (Mappa di sé):</label><textarea name="note_scheda1" rows="3"></textarea></div>
+                <div class="form-group"><label>Note su Scheda 2 (Pensiero sul lavoro):</label><textarea name="note_scheda2" rows="3"></textarea></div>
+                <div class="form-group"><label>Note su Scheda 3 (Modi di lavorare):</label><textarea name="note_scheda3" rows="3"></textarea></div>
+                <div class="form-group"><label>Note su Scheda 4 (Tutte le strade):</label><textarea name="note_scheda4" rows="3"></textarea></div>
+                <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
+            </form>
+        `;
+    }
+
+    function getPhase2FormHTML(studentId) {
+        // Qui andrà la tabella completa della Fase 2
+        return `
+            <h3>Fase 2: Scheda di Sintesi Individuale</h3>
+            <p>Compilare la scheda indicando per ogni dimensione se è "Presente" o "Da potenziare".</p>
+            <form id="fase2-form" data-studentid="${studentId}">
+                <p>La tabella di valutazione per lo studente con ID: ${studentId} apparirà qui.</p>
+                <button type="submit" class="submit-btn">Salva Sintesi Fase 2</button>
+            </form>
+        `;
+    }
+
+    function getPhase3FormHTML() {
+        return `
+            <h3>Fase 3: Scheda di Sintesi Generale</h3>
+            <p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p>
+            <form id="fase3-form">
+                <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3"></textarea></div>
+                <div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3"></textarea></div>
+                <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
+                <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
+                <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
+                <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
+            </form>
+        `;
+    }
+
+    // --- Logica Questionario Studente ---
     function initializeQuestionnaire() {
         if (isQuestionnaireInitialized) return;
-
         const controlsContent = document.getElementById('controls-content');
         let selectedNode = null;
         const cy = cytoscape({
@@ -138,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isQuestionnaireInitialized = true;
     }
 
+    // --- Logica Dashboard e Dettaglio ---
     async function initializeDashboard() {
         const user = firebase.auth().currentUser;
         if (!user) return;
@@ -159,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
             console.error(error);
         }
+        document.getElementById('show-fase1-btn')?.addEventListener('click', () => openModal(getPhase1FormHTML()));
+        document.getElementById('show-fase3-btn')?.addEventListener('click', () => openModal(getPhase3FormHTML()));
     }
 
     function renderStudentTable(students) {
@@ -237,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let html = `
                 <div class="student-data-section">
-                    <h4>SCHEDA 1 – MAPPA DI DESCRIzione DI SÉ</h4>
+                    <h4>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</h4>
                     ${renderField('10 Aggettivi (elenco)', [...Array(10).keys()].map(i => data[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}
                     ${renderMapDataAsText(data.mappa_interattiva)}
                     ${renderField('Attività preferite dalla mappa', data.scheda1_attivita_preferite)}
@@ -265,6 +332,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             contentDiv.innerHTML = html;
+            
+            document.getElementById('show-fase2-btn')?.addEventListener('click', () => openModal(getPhase2FormHTML(studentId)));
+
         } catch (error) {
             title.textContent = "Errore";
             contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;

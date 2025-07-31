@@ -208,13 +208,15 @@
         </div>
 
         <div id="dashboard-view" class="view" style="display: none;">
-    <div class="dashboard-header">
-        <h2>Dashboard Docente</h2>
-        <button id="logout-btn" class="logout-btn">Esci</button>
-    </div>
-    <p>Benvenuto/a nell'area riservata. Da qui potrai visualizzare i risultati degli studenti e compilare le schede del conduttore.</p>
-    
-    <div id="student-list-container">
+            <div class="dashboard-header">
+                <h2>Dashboard Docente</h2>
+                <div class="dashboard-actions">
+                    <button id="show-fase1-btn" class="action-btn">Compila Fase 1 (Griglia Osservazione)</button>
+                    <button id="show-fase3-btn" class="action-btn">Compila Fase 3 (Sintesi Classe)</button>
+                </div>
+                <button id="logout-btn" class="logout-btn">Esci</button>
+            </div>
+            <div id="student-list-container"></div>
         </div>
 </div>
 <!DOCTYPE html>
@@ -226,14 +228,22 @@
                 <a href="#/docente/dashboard" class="back-link">&larr; Torna alla Dashboard</a>
                 <h2 id="student-name-title">Dettaglio Studente</h2>
             </div>
-            <div id="student-detail-content">
-                </div>
+            <div class="dashboard-actions">
+                 <button id="show-fase2-btn" class="action-btn">Compila Fase 2 (Sintesi Individuale)</button>
+            </div>
+            <div id="student-detail-content"></div>
         </div>
     </main>
     </body>
 </html>
     </main>
-
+<div id="modal-container" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <div id="modal-body">
+                </div>
+        </div>
+    </div>
     <script>
       // Configurazione di Firebase (come da te fornita)
       const firebaseConfig = {
