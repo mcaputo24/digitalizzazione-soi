@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questionnaire: document.getElementById('questionnaire-view'),
         login: document.getElementById('login-view'),
         dashboard: document.getElementById('dashboard-view'),
-        studentDetail: document.getElementById('student-detail-view') // Aggiunta
+        studentDetail: document.getElementById('student-detail-view')
     };
     let isQuestionnaireInitialized = false;
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('download-pdf-btn').addEventListener('click', () => {
              const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            // ... (codice generazione PDF completo)
+            // ... (codice generazione PDF completo che hai già)
             doc.save(`Riepilogo_SOI_${savedData.cognome || 'Studente'}_${savedData.nome || ''}.pdf`);
         });
         
@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = firebase.auth().currentUser;
         if (!user) return;
         const container = document.getElementById('student-list-container');
+        if (!container) return;
         container.innerHTML = '<p>Caricamento studenti in corso...</p>';
         try {
             const token = await user.getIdToken();
@@ -174,13 +175,43 @@ document.addEventListener('DOMContentLoaded', () => {
         tableHTML += '</tbody></table>';
         container.innerHTML = tableHTML;
         
-        // Aggiungi l'event listener qui, dopo aver creato la tabella
         container.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('details-btn')) {
                 const studentId = event.target.dataset.id;
                 window.location.hash = `#/docente/studente/${studentId}`;
             }
         });
+    }
+
+    function renderMapDataAsText(mapData) {
+        if (!mapData || !mapData.elements || !mapData.elements.nodes) {
+            return '<p><strong>Riepilogo Mappa:</strong> Nessun dato presente nella mappa.</p>';
+        }
+        let html = '<div><strong>Riepilogo Mappa Interattiva:</strong><ul>';
+        const nodes = mapData.elements.nodes;
+        const edges = mapData.elements.edges;
+        const aggettivoNodes = nodes.filter(n => n.classes && n.classes.includes('aggettivo'));
+        if (aggettivoNodes.length === 0) {
+            return '<p><strong>Riepilogo Mappa:</strong> Nessun aggettivo inserito nella mappa.</p>';
+        }
+        aggettivoNodes.forEach(aggettivo => {
+            html += `<li><strong>${aggettivo.data.label}</strong><ul>`;
+            const connectedEdges = edges.filter(e => e.data.source === aggettivo.data.id);
+            if (connectedEdges.length > 0) {
+                connectedEdges.forEach(edge => {
+                    const targetNode = nodes.find(n => n.data.id === edge.data.target);
+                    if (targetNode) {
+                        const type = targetNode.classes.includes('attivita') ? 'Attività' : 'Contesto';
+                        html += `<li><em>${type}:</em> ${targetNode.data.label}</li>`;
+                    }
+                });
+            } else {
+                 html += `<li>Nessun dettaglio collegato.</li>`;
+            }
+            html += `</ul></li>`;
+        });
+        html += '</ul></div>';
+        return html;
     }
 
     async function initializeStudentDetailView(studentId) {
@@ -190,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = document.getElementById('student-name-title');
         title.textContent = "Caricamento Dettaglio...";
         contentDiv.innerHTML = '<p>Caricamento dati in corso...</p>';
-
         try {
             const token = await user.getIdToken();
             const response = await fetch('/.netlify/functions/get-single-student-data', {
@@ -203,14 +233,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             title.textContent = `Dettaglio per: ${data.nome} ${data.cognome}`;
             
-            // Funzione per mostrare i dati in modo pulito
-            const renderField = (label, value) => `<p><strong>${label}:</strong> ${value || 'Non specificato'}</p>`;
+            const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
             let html = `
                 <div class="student-data-section">
-                    <h4>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</h4>
-                    ${renderField('10 Aggettivi', [...Array(10).keys()].map(i => data[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}
-                    ${renderField('Attività preferite', data.scheda1_attivita_preferite)}
+                    <h4>SCHEDA 1 – MAPPA DI DESCRIzione DI SÉ</h4>
+                    ${renderField('10 Aggettivi (elenco)', [...Array(10).keys()].map(i => data[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}
+                    ${renderMapDataAsText(data.mappa_interattiva)}
+                    ${renderField('Attività preferite dalla mappa', data.scheda1_attivita_preferite)}
                     ${renderField('Preferenze scolastiche', data.scheda1_preferenze_scolastiche)}
                 </div>
                 <div class="student-data-section">
@@ -235,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             contentDiv.innerHTML = html;
-
         } catch (error) {
             title.textContent = "Errore";
             contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
