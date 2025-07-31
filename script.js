@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definizione delle viste (con l'aggiunta di studentDetail)
+    // Definizione delle viste
     const views = {
         home: document.getElementById('home-view'),
         questionnaire: document.getElementById('questionnaire-view'),
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE ---
+    // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE (DETTAGLIATI) ---
     function getPhase1FormHTML() {
         return `
             <h3>Fase 1: Griglia di Osservazione Classe</h3>
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2"></textarea></div>
                     <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2"></textarea></div>
                 </div>
-                <button type="submit" class="submit-btn" disabled>Salva Griglia (da attivare)</button>
+                <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
             </form>
         `;
     }
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <tr><td>Organizzazione</td><td><input id="sum_orga_p" disabled> / 4</td><td><input id="sum_orga_d" disabled> / 4</td><td><input id="res_orga" disabled></td></tr>
                     </tbody>
                 </table>
-                <button type="submit" class="submit-btn" disabled>Salva Sintesi (da attivare)</button>
+                <button type="submit" class="submit-btn">Salva Sintesi Fase 2</button>
             </form>
         `;
     }
@@ -128,11 +128,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
                 <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
                 <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
-                <button type="submit" class="submit-btn" disabled>Salva Sintesi (da attivare)</button>
+                <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
             </form>
         `;
     }
+    
+    // Funzione di salvataggio generica per i form del docente
+    async function handleTeacherFormSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Salvataggio...';
 
+        try {
+            const user = firebase.auth().currentUser;
+            if (!user) throw new Error("Utente non autenticato.");
+            
+            const token = await user.getIdToken();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            const payload = {
+                formType: form.id.replace('-form', ''), // es. 'fase1'
+                studentId: form.dataset.studentid || null,
+                data: data
+            };
+
+            const response = await fetch('/.netlify/functions/save-teacher-data', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Errore del server.');
+            }
+            
+            alert('Dati salvati con successo!');
+            closeModal();
+
+        } catch (error) {
+            alert(`Errore: ${error.message}`);
+            submitButton.disabled = false;
+            // Ripristina testo originale in base al form
+            const formType = form.id.replace('-form', '');
+            submitButton.textContent = `Salva ${formType.charAt(0).toUpperCase() + formType.slice(1)}`;
+        }
+    }
+
+    // Il resto del tuo codice da 399 righe (initializeQuestionnaire, dashboard, etc.)
+    // va qui, esattamente come me lo hai fornito.
+    // Ho solo aggiunto la logica modale e le funzioni getPhase...HTML all'inizio.
+    
+    // Inizio del tuo codice
     function initializeQuestionnaire() {
         if (isQuestionnaireInitialized) return;
         const controlsContent = document.getElementById('controls-content');
@@ -282,8 +332,16 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
             console.error(error);
         }
-        document.getElementById('show-fase1-btn')?.addEventListener('click', () => openModal(getPhase1FormHTML()));
-        document.getElementById('show-fase3-btn')?.addEventListener('click', () => openModal(getPhase3FormHTML()));
+        document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
+            openModal(getPhase1FormHTML(), () => {
+                document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
+            });
+        });
+        document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
+            openModal(getPhase3FormHTML(), () => {
+                 document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
+            });
+        });
     }
 
     function renderStudentTable(students) {
@@ -387,7 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
                 openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName)), () => {
-                    attachPhase2Calculators(); 
+                    attachPhase2Calculators();
+                    document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
                 });
             });
         } catch (error) {
@@ -416,11 +475,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     else if (radio.value === 'potenziare') { dimensions[dim].d++; }
                 });
                 Object.values(dimensions).forEach(dim => {
-                    document.getElementById(`sum_${dim.id}_p`).value = dim.p;
-                    document.getElementById(`sum_${dim.id}_d`).value = dim.d;
+                    const p_el = document.getElementById(`sum_${dim.id}_p`);
+                    const d_el = document.getElementById(`sum_${dim.id}_d`);
+                    const res_el = document.getElementById(`res_${dim.id}`);
+                    if(p_el) p_el.value = dim.p;
+                    if(d_el) d_el.value = dim.d;
                     let result = '';
                     if ((dim.p + dim.d) > 0) { result = (dim.p >= dim.d) ? 'PRESENTE' : 'DA POTENZIARE';}
-                    document.getElementById(`res_${dim.id}`).value = result;
+                    if(res_el) res_el.value = result;
                 });
             }
         });
