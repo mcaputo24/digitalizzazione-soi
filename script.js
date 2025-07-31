@@ -9,98 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isQuestionnaireInitialized = false;
 
-// --- INCOLLA QUESTO BLOCCO DI CODICE ---
-
-    let availableClasses = []; // Memorizza le classi disponibili
-
-    // --- LOGICA FINESTRA MODALE ---
-    const modalContainer = document.getElementById('modal-container');
-    const modalBody = document.getElementById('modal-body');
-    const closeModalBtn = document.querySelector('.close-modal-btn');
-
-    function openModal(content, onOpenCallback) {
-        if (modalBody) modalBody.innerHTML = content;
-        if (modalContainer) modalContainer.style.display = 'flex';
-        if (typeof onOpenCallback === 'function') {
-            onOpenCallback();
-        }
-    }
-
-    function closeModal() {
-        if (modalContainer) modalContainer.style.display = 'none';
-        if (modalBody) modalBody.innerHTML = '';
-    }
-
-    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-    if (modalContainer) modalContainer.addEventListener('click', function(event) {
-        if (event.target === modalContainer) {
-            closeModal();
-        }
-    });
-
-    // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE (DETTAGLIATI) ---
-    function getPhase1FormHTML() {
-        const classOptions = availableClasses.map(c => `<option value="${c}">${c}</option>`).join('');
-        return `
-            <h3>Fase 1: Griglia di Osservazione Classe</h3>
-            <form id="fase1-form">
-                <div class="form-group"><label for="fase1_classe">Seleziona la Classe:</label><select id="fase1_classe" name="classe" required><option value="" disabled selected>-- Seleziona --</option>${classOptions}</select></div><hr>
-                <div class="teacher-form-section"><h4>Note su Scheda 1 (Mappa di sé)</h4><div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2"></textarea></div><div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s1_processo_decisionale" rows="2"></textarea></div><div class="form-group"><label>Visione futura:</label><textarea name="f1_s1_visione_futura" rows="2"></textarea></div><div class="form-group"><label>Organizzazione:</label><textarea name="f1_s1_organizzazione" rows="2"></textarea></div></div>
-                <div class="teacher-form-section"><h4>Note su Scheda 2 (Pensiero sul lavoro)</h4><div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s2_autoconsapevolezza" rows="2"></textarea></div><div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s2_conoscenza_lavoro" rows="2"></textarea></div><div class="form-group"><label>Visione futura:</label><textarea name="f1_s2_visione_futura" rows="2"></textarea></div><div class="form-group"><label>Organizzazione:</label><textarea name="f1_s2_organizzazione" rows="2"></textarea></div></div>
-                <div class="teacher-form-section"><h4>Note su Scheda 3 (Modi di lavorare)</h4><div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s3_autoconsapevolezza" rows="2"></textarea></div><div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s3_processo_decisionale" rows="2"></textarea></div><div class="form-group"><label>Visione futura:</label><textarea name="f1_s3_visione_futura" rows="2"></textarea></div><div class="form-group"><label>Organizzazione:</label><textarea name="f1_s3_organizzazione" rows="2"></textarea></div></div>
-                <div class="teacher-form-section"><h4>Note su Scheda 4 (Tutte le strade)</h4><div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s4_autoconsapevolezza" rows="2"></textarea></div><div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s4_conoscenza_lavoro" rows="2"></textarea></div><div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s4_processo_decisionale" rows="2"></textarea></div><div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2"></textarea></div><div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2"></textarea></div></div>
-                <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
-            </form>
-        `;
-    }
-
-    function getPhase2FormHTML(studentId, studentName, studentData) {
-        const studentAnswersHTML = `<div class="student-data-section"><h4>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</h4>${renderField('10 Aggettivi (elenco)', [...Array(10).keys()].map(i => studentData[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}${renderMapDataAsText(studentData.mappa_interattiva)}${renderField('Attività preferite dalla mappa', studentData.scheda1_attivita_preferite)}${renderField('Preferenze scolastiche', studentData.scheda1_preferenze_scolastiche)}</div><div class="student-data-section"><h4>SCHEDA 2 – UN PENSIERO SUL LAVORO</h4>${renderField('Cosa è il lavoro', studentData.scheda2_cosa_e_lavoro)}${renderField('Perché le persone lavorano', studentData.scheda2_perche_si_lavora)}${renderField('Se nessuno lavorasse', studentData.scheda2_se_nessuno_lavorasse)}${renderField('Se penso al lavoro, mi sento...', studentData.scheda2_come_mi_sento)}</div><div class="student-data-section"><h4>SCHEDA 3 – MODI DI LAVORARE</h4>${renderField('Riflessione', studentData.scheda3_riflessione)}</div><div class="student-data-section"><h4>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</h4>${renderField('Lavori desiderati', studentData.scheda4_lavori_desiderati)}${renderField('Immaginario sul lavoro', studentData.scheda4_immaginario_lavoro)}${renderField('Motivazioni', studentData.scheda4_motivazioni)}${renderField('Desideri e sogni', studentData.scheda4_desideri_sogni)}${renderField('Ispirazione', studentData.scheda4_ispirazione)}${renderField('Modo di studiare', studentData.scheda4_modo_studiare)}</div>`;
-        const evaluationFormHTML = `<form id="fase2-form" data-studentid="${studentId}"><h4>Valutazione Conduttore</h4><p>Indicare per ogni dimensione se è "Presente" o "Da potenziare".</p><table class="evaluation-table"><thead><tr><th>SCHEDE</th><th>DIMENSIONI</th><th>Presente</th><th>Da potenziare</th></tr></thead><tbody><tr><td rowspan="4">Scheda 1</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s1_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s1_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr><tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s1_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s1_proc" value="potenziare" data-dim="processo_decisionale"></td></tr><tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s1_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s1_visi" value="potenziare" data-dim="visione_futura"></td></tr><tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s1_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s1_orga" value="potenziare" data-dim="organizzazione"></td></tr><tr><td rowspan="4">Scheda 2</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s2_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s2_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr><tr><td>Conoscenza mondo lavoro</td><td class="check-cell"><input type="radio" name="f2_s2_cono" value="presente" data-dim="conoscenza_lavoro"></td><td class="check-cell"><input type="radio" name="f2_s2_cono" value="potenziare" data-dim="conoscenza_lavoro"></td></tr><tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s2_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s2_visi" value="potenziare" data-dim="visione_futura"></td></tr><tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s2_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s2_orga" value="potenziare" data-dim="organizzazione"></td></tr><tr><td rowspan="4">Scheda 3</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s3_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s3_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr><tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s3_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s3_proc" value="potenziare" data-dim="processo_decisionale"></td></tr><tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s3_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s3_visi" value="potenziare" data-dim="visione_futura"></td></tr><tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s3_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s3_orga" value="potenziare" data-dim="organizzazione"></td></tr><tr><td rowspan="5">Scheda 4</td><td>Autoconsapevolezza</td><td class="check-cell"><input type="radio" name="f2_s4_auto" value="presente" data-dim="autoconsapevolezza"></td><td class="check-cell"><input type="radio" name="f2_s4_auto" value="potenziare" data-dim="autoconsapevolezza"></td></tr><tr><td>Conoscenza mondo lavoro</td><td class="check-cell"><input type="radio" name="f2_s4_cono" value="presente" data-dim="conoscenza_lavoro"></td><td class="check-cell"><input type="radio" name="f2_s4_cono" value="potenziare" data-dim="conoscenza_lavoro"></td></tr><tr><td>Processo decisionale</td><td class="check-cell"><input type="radio" name="f2_s4_proc" value="presente" data-dim="processo_decisionale"></td><td class="check-cell"><input type="radio" name="f2_s4_proc" value="potenziare" data-dim="processo_decisionale"></td></tr><tr><td>Visione futura</td><td class="check-cell"><input type="radio" name="f2_s4_visi" value="presente" data-dim="visione_futura"></td><td class="check-cell"><input type="radio" name="f2_s4_visi" value="potenziare" data-dim="visione_futura"></td></tr><tr><td>Organizzazione</td><td class="check-cell"><input type="radio" name="f2_s4_orga" value="presente" data-dim="organizzazione"></td><td class="check-cell"><input type="radio" name="f2_s4_orga" value="potenziare" data-dim="organizzazione"></td></tr></tbody></table><hr><h4>Sintesi per Dimensione (calcolata automaticamente)</h4><table class="evaluation-table summary-table"><thead><tr><th>DIMENSIONI</th><th>PRESENTE</th><th>DA POTENZIARE</th><th>RISULTATO GENERALE</th></tr></thead><tbody><tr><td>Autoconsapevolezza</td><td><input id="sum_auto_p" disabled> / 4</td><td><input id="sum_auto_d" disabled> / 4</td><td><input id="res_auto" disabled></td></tr><tr><td>Conoscenza mondo lavoro</td><td><input id="sum_cono_p" disabled> / 2</td><td><input id="sum_cono_d" disabled> / 2</td><td><input id="res_cono" disabled></td></tr><tr><td>Processo decisionale</td><td><input id="sum_proc_p" disabled> / 3</td><td><input id="sum_proc_d" disabled> / 3</td><td><input id="res_proc" disabled></td></tr><tr><td>Visione futura</td><td><input id="sum_visi_p" disabled> / 4</td><td><input id="sum_visi_d" disabled> / 4</td><td><input id="res_visi" disabled></td></tr><tr><td>Organizzazione</td><td><input id="sum_orga_p" disabled> / 4</td><td><input id="sum_orga_d" disabled> / 4</td><td><input id="res_orga" disabled></td></tr></tbody></table><button type="submit" class="submit-btn">Salva Sintesi Fase 2</button></form>`;
-        return `<h3>Fase 2: Scheda di Sintesi per ${studentName}</h3><div class="split-modal-container"><div class="split-modal-left"><h4>Riepilogo Risposte Studente</h4>${studentAnswersHTML}</div><div class="split-modal-right">${evaluationFormHTML}</div></div>`;
-    }
-
-    function getPhase3FormHTML() {
-        const classOptions = availableClasses.map(c => `<option value="${c}">${c}</option>`).join('');
-        return `<h3>Fase 3: Scheda di Sintesi Generale</h3><form id="fase3-form"><div class="form-group"><label for="fase3_classe">Seleziona la Classe:</label><select id="fase3_classe" name="classe" required><option value="" disabled selected>-- Seleziona --</option>${classOptions}</select></div><hr><p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p><div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3"></textarea></div><div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3"></textarea></div><div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div><div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div><div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div><button type="submit" class="submit-btn">Salva Sintesi Fase 3</button></form>`;
-    }
-    
-    async function handleTeacherFormSubmit(event) {
-        event.preventDefault();
-        const form = event.target;
-        const submitButton = form.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.textContent = 'Salvataggio...';
-        try {
-            const user = firebase.auth().currentUser;
-            if (!user) throw new Error("Utente non autenticato.");
-            const token = await user.getIdToken();
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            const payload = {
-                formType: form.id.replace('-form', ''),
-                studentId: form.dataset.studentid || null,
-                data: data
-            };
-            const response = await fetch('/.netlify/functions/save-teacher-data', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Errore del server.');
-            }
-            alert('Dati salvati con successo!');
-            closeModal();
-        } catch (error) {
-            alert(`Errore: ${error.message}`);
-            submitButton.disabled = false;
-            const formType = form.id.replace('-form', '');
-            submitButton.textContent = `Salva ${formType.charAt(0).toUpperCase() + formType.slice(1)}`;
-        }
-    }
-
     // --- LOGICA FINESTRA MODALE ---
     const modalContainer = document.getElementById('modal-container');
     const modalBody = document.getElementById('modal-body');
@@ -403,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isQuestionnaireInitialized = true;
     }
 
-    // --- SOSTITUISCI QUESTA FUNZIONE ---
     async function initializeDashboard() {
         const user = firebase.auth().currentUser;
         if (!user) return;
@@ -419,9 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
             }
-            const data = await response.json();
-            availableClasses = data.classes; // Salva la lista delle classi
-            renderStudentTable(data.students);
+            const students = await response.json();
+            renderStudentTable(students);
         } catch (error) {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
             console.error(error);
@@ -486,7 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
-    // --- SOSTITUISCI QUESTA FUNZIONE ---
     async function initializeStudentDetailView(studentId, studentName) {
         const user = firebase.auth().currentUser;
         if (!user) return;
@@ -539,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.innerHTML = html;
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-                openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName), data), () => {
+                openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName)), () => {
                     attachPhase2Calculators();
                     document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
                 });
