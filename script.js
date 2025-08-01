@@ -358,14 +358,13 @@ renderStudentTable(students);
             console.error(error);
         }
         document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
-    openModal(
-        getPhase1FormHTML(classes),
+    openModal(getPhase1FormHTML(classes),
         () => {
             document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
         }
     );
 });
-document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
+	document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
     openModal(getPhase3FormHTML(classes), () => {
          document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
     });
