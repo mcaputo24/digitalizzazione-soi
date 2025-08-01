@@ -335,8 +335,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
             }
-            const students = await response.json();
+            // Deserializzo il body { students, classes }
+const payload  = await response.json();
+const students = payload.students || [];
+const classes  = payload.classes  || [];
+
 renderStudentTable(students);
+
 
         } catch (error) {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
