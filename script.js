@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         studentDetail: document.getElementById('student-detail-view')
     };
     let isQuestionnaireInitialized = false;
-    let availableClasses = []; // Memorizza le classi disponibili
 
     // --- LOGICA FINESTRA MODALE ---
     const modalContainer = document.getElementById('modal-container');
@@ -322,38 +321,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initializeDashboard() {
-    const user = firebase.auth().currentUser;
-    if (!user) return;
-    const container = document.getElementById('student-list-container');
-    if (!container) return;
-    container.innerHTML = '<p>Caricamento studenti in corso...</p>';
-    try {
-        const token = await user.getIdToken();
-        const response = await fetch('/.netlify/functions/get-student-data', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+	let classes = [];
+        const container = document.getElementById('student-list-container');
+        if (!container) return;
+        container.innerHTML = '<p>Caricamento studenti in corso...</p>';
+        try {
+            const token = await user.getIdToken();
+                        const response = await fetch('/.netlify/functions/get-student-data', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
+            }
+            // Deserializzo il body { students, classes }
+const payload  = await response.json();
+const students = payload.students || [];
+classes        = payload.classes  || [];
+
+renderStudentTable(students);
+
+
+        } catch (error) {
+            container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
+            console.error(error);
         }
-        const data = await response.json();
-        availableClasses = data.classes; // Memorizza la lista delle classi
-        renderStudentTable(data.students);
-    } catch (error) {
-        container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
-        console.error(error);
-    }
-    document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
-        openModal(getPhase1FormHTML(), () => { // Non serve più passare le classi qui
-            document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
-        });
-    });
-    document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
-        openModal(getPhase3FormHTML(), () => { // Non serve più passare le classi qui
-             document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
-        });
-    });
-}
         document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
     openModal(
         getPhase1FormHTML(classes),
@@ -414,39 +408,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initializeStudentDetailView(studentId, studentName) {
-    const user = firebase.auth().currentUser;
-    if (!user) return;
-    const contentDiv = document.getElementById('student-detail-content');
-    const title = document.getElementById('student-name-title');
-    title.textContent = `Dettaglio per: ${decodeURIComponent(studentName)}`;
-    contentDiv.innerHTML = '<p>Caricamento dati in corso...</p>';
-    try {
-        const token = await user.getIdToken();
-        const response = await fetch('/.netlify/functions/get-single-student-data', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ studentId })
-        });
-        if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
-        
-        const data = await response.json(); // Contiene tutti i dati dello studente
-        
-        // Svuotiamo il contenuto di dettaglio, perché ora è nella modale
-        contentDiv.innerHTML = `<div class="student-data-section"><h4>Riepilogo Risposte</h4><p>Le risposte complete dello studente sono visibili nel modulo di valutazione qui sopra.</p></div>`;
-        
-        // Attiva il pulsante per aprire la modale affiancata, passando tutti i dati
-        document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-            openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName), data), () => {
-                attachPhase2Calculators();
-                document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+        const contentDiv = document.getElementById('student-detail-content');
+        const title = document.getElementById('student-name-title');
+        title.textContent = `Dettaglio per: ${decodeURIComponent(studentName)}`;
+        contentDiv.innerHTML = '<p>Caricamento dati in corso...</p>';
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch('/.netlify/functions/get-single-student-data', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studentId })
             });
-        });
-    } catch (error) {
-        title.textContent = "Errore";
-        contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
-        console.error(error);
+            if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
+            
+            const data = await response.json();
+            
+            const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
+
+            let html = `
+                <div class="student-data-section">
+                    <h4>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</h4>
+                    ${renderField('10 Aggettivi (elenco)', [...Array(10).keys()].map(i => data[`aggettivo_${i+1}`] || '').filter(Boolean).join(', '))}
+                    ${renderMapDataAsText(data.mappa_interattiva)}
+                    ${renderField('Attività preferite dalla mappa', data.scheda1_attivita_preferite)}
+                    ${renderField('Preferenze scolastiche', data.scheda1_preferenze_scolastiche)}
+                </div>
+                <div class="student-data-section">
+                    <h4>SCHEDA 2 – UN PENSIERO SUL LAVORO</h4>
+                    ${renderField('Cosa è il lavoro', data.scheda2_cosa_e_lavoro)}
+                    ${renderField('Perché le persone lavorano', data.scheda2_perche_si_lavora)}
+                    ${renderField('Se nessuno lavorasse', data.scheda2_se_nessuno_lavorasse)}
+                    ${renderField('Se penso al lavoro, mi sento...', data.scheda2_come_mi_sento)}
+                </div>
+                 <div class="student-data-section">
+                    <h4>SCHEDA 3 – MODI DI LAVORARE</h4>
+                    ${renderField('Riflessione', data.scheda3_riflessione)}
+                </div>
+                 <div class="student-data-section">
+                    <h4>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</h4>
+                    ${renderField('Lavori desiderati', data.scheda4_lavori_desiderati)}
+                    ${renderField('Immaginario sul lavoro', data.scheda4_immaginario_lavoro)}
+                    ${renderField('Motivazioni', data.scheda4_motivazioni)}
+                    ${renderField('Desideri e sogni', data.scheda4_desideri_sogni)}
+                    ${renderField('Ispirazione', data.scheda4_ispirazione)}
+                    ${renderField('Modo di studiare', data.scheda4_modo_studiare)}
+                </div>
+            `;
+            contentDiv.innerHTML = html;
+            
+            document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
+                openModal(`
+  <div class="split-modal-container">
+    <div class="split-modal-left">
+      ${html}
+    </div>
+    <div class="split-modal-right">
+      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName))}
+    </div>
+  </div>
+`, () => {
+  attachPhase2Calculators();
+  document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
+});
+            });
+        } catch (error) {
+            title.textContent = "Errore";
+            contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
+        }
     }
-}
 
     function attachPhase2Calculators() {
         const form = document.getElementById('fase2-form');
