@@ -328,15 +328,21 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '<p>Caricamento studenti in corso...</p>';
         try {
             const token = await user.getIdToken();
-            const response = await fetch('/.netlify/functions/get-student-data', {
+                        const response = await fetch('/.netlify/functions/get-student-data', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
             }
-            const students = await response.json();
+            const result = await response.json();
+            console.log('🎯 get-student-data ritorna:', result);
+            // se result è un array puro, OK, altrimenti vedi qui sotto
+            const students = Array.isArray(result) 
+                ? result 
+                : (result.students || result.data || []);
             renderStudentTable(students);
+
         } catch (error) {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
             console.error(error);
