@@ -35,11 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE (DETTAGLIATI) ---
-    function getPhase1FormHTML() {
-        return `
-            <h3>Fase 1: Griglia di Osservazione Classe</h3>
-            <p>Inserire le annotazioni più rilevanti prese durante l’osservazione.</p>
-            <form id="fase1-form">
+    function getPhase1FormHTML(classiDisponibili = []) {
+    const optionsHTML = classiDisponibili.map(cl => `<option value="${cl}">${cl}</option>`).join('');
+    return `
+        <h3>Fase 1: Griglia di Osservazione Classe</h3>
+        <p>Indicare la classe osservata e inserire le annotazioni rilevanti.</p>
+        <form id="fase1-form">
+            <div class="form-group">
+                <label for="classe">Classe di riferimento:</label>
+                <select name="classe" required>
+                    <option value="">-- Seleziona una classe --</option>
+                    ${optionsHTML}
+                </select>
+            </div>
+
                 <div class="teacher-form-section">
                     <h4>Note su Scheda 1 (Mappa di sé)</h4>
                     <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2"></textarea></div>
@@ -332,16 +341,23 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
             console.error(error);
         }
-        document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
-            openModal(getPhase1FormHTML(), () => {
-                document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
-            });
+        document.getElementById('show-fase1-btn')?.addEventListener('click', async () => {
+    try {
+        const user = firebase.auth().currentUser;
+        const token = await user.getIdToken();
+        const response = await fetch('/.netlify/functions/get-class-list', {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
-            openModal(getPhase3FormHTML(), () => {
-                 document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
-            });
+        const classi = await response.json();
+
+        openModal(getPhase1FormHTML(classi), () => {
+            document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
         });
+    } catch (error) {
+        alert("Errore nel recupero delle classi.");
+    }
+});
+
     }
 
     function renderStudentTable(students) {
@@ -444,10 +460,19 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.innerHTML = html;
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-                openModal(getPhase2FormHTML(studentId, decodeURIComponent(studentName)), () => {
-                    attachPhase2Calculators();
-                    document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
-                });
+                openModal(`
+  <div class="split-modal-container">
+    <div class="split-modal-left">
+      ${html}
+    </div>
+    <div class="split-modal-right">
+      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName))}
+    </div>
+  </div>
+`, () => {
+  attachPhase2Calculators();
+  document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
+});
             });
         } catch (error) {
             title.textContent = "Errore";
