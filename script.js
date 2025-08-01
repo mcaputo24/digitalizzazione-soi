@@ -330,46 +330,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initializeDashboard() {
-        const user = firebase.auth().currentUser;
-        if (!user) return;
-	let classes = [];
-        const container = document.getElementById('student-list-container');
-        if (!container) return;
-        container.innerHTML = '<p>Caricamento studenti in corso...</p>';
-        try {
-            const token = await user.getIdToken();
-                        const response = await fetch('/.netlify/functions/get-student-data', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
-            }
-            // Deserializzo il body { students, classes }
-const payload  = await response.json();
-const students = payload.students || [];
-classes        = payload.classes  || [];
+    const user = firebase.auth().currentUser;
+    if (!user) return;
 
-renderStudentTable(students);
+    const container = document.getElementById('student-list-container');
+    if (!container) return;
+    container.innerHTML = '<p>Caricamento studenti in corso...</p>';
 
-
-        } catch (error) {
-            container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
-            console.error(error);
+    try {
+        const token = await user.getIdToken();
+        const response = await fetch('/.netlify/functions/get-student-data', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
         }
+        
+        const data = await response.json();
+        availableClasses = data.classes; // Ora la variabile è pronta
+        renderStudentTable(students);
+
+        // ATTIVIAMO I PULSANTI QUI, DOPO CHE 'availableClasses' ESISTE
         document.getElementById('show-fase1-btn')?.addEventListener('click', () => {
-    openModal(getPhase1FormHTML(classes),
-        () => {
-            document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
-        }
-    );
-});
-	document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
-    openModal(getPhase3FormHTML(classes), () => {
-         document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
-    });
-});
+            openModal(getPhase1FormHTML(), () => {
+                document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
+            });
+        });
+        
+        document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
+            openModal(getPhase3FormHTML(), () => {
+                 document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
+            });
+        });
+
+    } catch (error) {
+        container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
+        console.error(error);
     }
+}
 
     function renderStudentTable(students) {
         const container = document.getElementById('student-list-container');
