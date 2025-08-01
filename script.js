@@ -335,13 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Errore nel caricamento dei dati.');
             }
-            const result = await response.json();
-            console.log('🎯 get-student-data ritorna:', result);
-            // se result è un array puro, OK, altrimenti vedi qui sotto
-            const students = Array.isArray(result) 
-                ? result 
-                : (result.students || result.data || []);
-            renderStudentTable(students);
+            const students = await response.json();
+renderStudentTable(students);
 
         } catch (error) {
             container.innerHTML = `<p class="error-message">Impossibile caricare la lista degli studenti: ${error.message}</p>`;
