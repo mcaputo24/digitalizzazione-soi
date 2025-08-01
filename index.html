@@ -210,26 +210,25 @@
         <div id="dashboard-view" class="view" style="display: none;">
             <div class="dashboard-header">
                 <h2>Dashboard Docente</h2>
+                <div class="dashboard-actions">
+                    <button id="show-fase1-btn" class="action-btn">Compila Fase 1 (Griglia di Osservazione della Classe)</button>
+                    <button id="show-fase3-btn" class="action-btn">Compila Fase 3 (Scheda di Sintesi Generale)</button>
+                </div>
                 <button id="logout-btn" class="logout-btn">Esci</button>
-            </div>
-            <div class="dashboard-actions">
-                <button id="show-fase1-btn" class="action-btn">Compila Fase 1 (Griglia Osservazione)</button>
-                <button id="show-fase3-btn" class="action-btn">Compila Fase 3 (Sintesi Classe)</button>
             </div>
             <div id="student-list-container"></div>
         </div>
 <!-- Vista dettaglio studente -->
     <div id="student-detail-view" class="view" style="display: none;">
-            <div class="detail-header">
-                <a href="#/docente/dashboard" class="back-link">&larr; Torna alla Dashboard</a>
-                <h2 id="student-name-title">Dettaglio Studente</h2>
-            </div>
-            <div class="dashboard-actions">
-                 <button id="show-fase2-btn" class="action-btn">Compila Fase 2 (Sintesi Individuale)</button>
-            </div>
-            <div id="student-detail-content"></div>
-     </div>
-</main>
+        <div class="detail-header">
+            <a href="#/docente/dashboard" class="back-link">&larr; Torna alla Dashboard</a>
+            <h2 id="student-name-title">Dettaglio Studente</h2>
+        </div>
+        <div class="dashboard-actions">
+            <button id="show-fase2-btn" class="action-btn">Compila Fase 2 (Sintesi Individuale)</button>
+        </div>
+        <div id="student-detail-content"></div>
+    </div>
 <div id="modal-container" class="modal-container" style="display: none;">
         <div class="modal-content">
             <button class="close-modal-btn">&times;</button>

@@ -458,42 +458,20 @@ renderStudentTable(students);
             `;
             contentDiv.innerHTML = html;
             
-            // ----------------------
-// NUOVO CODICE: apertura Fase 2 con prefill
-// ----------------------
-document.getElementById('show-fase2-btn')?.addEventListener('click', async () => {
-  const token = await firebase.auth().currentUser.getIdToken();
-
-  // 1) Chiedo al backend i dati già salvati per questa fase
-  const resp = await fetch('/.netlify/functions/get-teacher-data', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ studentId, formType: 'fase2' })
-  });
-  const { data: saved } = await resp.json();
-
-  // 2) Apro la modale con il form
-  openModal(
-    getPhase2FormHTML(studentId, decodeURIComponent(studentName)),
-    () => {
-      // 3) Prefill: seleziono i radio già salvati
-      Object.entries(saved).forEach(([fieldName, value]) => {
-        const inputEl = document.querySelector(
-          `#fase2-form [name="${fieldName}"][value="${value}"]`
-        );
-        if (inputEl) inputEl.checked = true;
-      });
-      // 4) Avvio i calcolatori e il submit handler come prima
-      attachPhase2Calculators();
-      document.getElementById('fase2-form')
-              ?.addEventListener('submit', handleTeacherFormSubmit);
-    }
-  );
+            document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
+                openModal(`
+  <div class="split-modal-container">
+    <div class="split-modal-left">
+      ${html}
+    </div>
+    <div class="split-modal-right">
+      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName))}
+    </div>
+  </div>
+`, () => {
+  attachPhase2Calculators();
+  document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
 });
-
             });
         } catch (error) {
             title.textContent = "Errore";
