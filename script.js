@@ -128,19 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getPhase3FormHTML() {
-        return `
-            <h3>Fase 3: Scheda di Sintesi Generale</h3>
+    const classOptions = availableClasses.map(c => `<option value="${c}">${c}</option>`).join('');
+    return `
+        <h3>Fase 3: Scheda di Sintesi Generale</h3>
+        <form id="fase3-form">
+            <div class="form-group">
+                <label for="fase3_classe">Seleziona la Classe:</label>
+                <select id="fase3_classe" name="classe" required>
+                    <option value="" disabled selected>-- Seleziona --</option>
+                    ${classOptions}
+                </select>
+            </div>
+            <hr>
             <p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p>
-            <form id="fase3-form">
-                <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3"></textarea></div>
-                <div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3"></textarea></div>
-                <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
-                <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
-                <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
-                <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
-            </form>
-        `;
-    }
+            <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3"></textarea></div>
+            <div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3"></textarea></div>
+            <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
+            <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
+            <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
+            <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
+        </form>
+    `;
+}
     
     // Funzione di salvataggio generica per i form del docente
     async function handleTeacherFormSubmit(event) {
@@ -356,7 +365,11 @@ renderStudentTable(students);
         }
     );
 });
-
+document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
+    openModal(getPhase3FormHTML(classes), () => {
+         document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
+    });
+});
     }
 
     function renderStudentTable(students) {
