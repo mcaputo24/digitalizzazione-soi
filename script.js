@@ -364,12 +364,14 @@ renderStudentTable(students);
         }
     );
 });
-	document.getElementById('show-fase3-btn')?.addEventListener('click', () => {
-    openModal(getPhase3FormHTML(classes), () => {
-         document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
-    });
-});
+	document.body.addEventListener('click', (event) => {
+    if (event.target.id === 'show-fase3-btn') {
+        openModal(getPhase3FormHTML(classes), () => {
+            document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
+        });
     }
+});
+
 
     function renderStudentTable(students) {
         const container = document.getElementById('student-list-container');
