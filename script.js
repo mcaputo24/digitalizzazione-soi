@@ -1,10 +1,27 @@
 let availableClasses = [];
 
+// Funzione per recuperare dati salvati
+async function fetchSavedTeacherData(formType, contextId) {
+    const user = firebase.auth().currentUser;
+    if (!user) throw new Error("Utente non autenticato");
+    const token = await user.getIdToken();
+
+    const response = await fetch('/.netlify/functions/get-teacher-data', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ formType, contextId })
+    });
+
+    if (!response.ok) return null;
+    return await response.json();
+}
+
 // Event delegation per Fase 1 e Fase 3
 // Registrata all'avvio su #dashboard-view
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Definizione delle viste
     const views = {
         home: document.getElementById('home-view'),
         questionnaire: document.getElementById('questionnaire-view'),
@@ -15,17 +32,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let isQuestionnaireInitialized = false;
 
     if (views.dashboard) {
-        views.dashboard.addEventListener('click', (event) => {
-            const target = event.target;
+        views.dashboard.addEventListener('click', async (event) => {
+            const target = event.target.closest('button');
+            if (!target) return;
+
             if (target.id === 'show-fase1-btn') {
-                openModal(getPhase1FormHTML(availableClasses), () => {
-                    document.getElementById('fase1-form')?.addEventListener('submit', handleTeacherFormSubmit);
-                });
+                const classe = prompt("Inserisci la classe per cui vuoi modificare o salvare la Fase 1:");
+                if (!classe) return;
+                try {
+                    const savedData = await fetchSavedTeacherData('fase1', classe);
+                    openModal(getPhase1FormHTML(availableClasses, savedData || {}), () => {
+                        const form = document.getElementById('fase1-form');
+                        if (form) {
+                            form.querySelector('select[name="classe"]').value = classe;
+                            form.addEventListener('submit', handleTeacherFormSubmit);
+                        }
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
             }
+
             if (target.id === 'show-fase3-btn') {
-                openModal(getPhase3FormHTML(availableClasses), () => {
-                    document.getElementById('fase3-form')?.addEventListener('submit', handleTeacherFormSubmit);
-                });
+                const classe = prompt("Inserisci la classe per cui vuoi modificare o salvare la Fase 3:");
+                if (!classe) return;
+                try {
+                    const savedData = await fetchSavedTeacherData('fase3', classe);
+                    openModal(getPhase3FormHTML(savedData || {}), () => {
+                        const form = document.getElementById('fase3-form');
+                        if (form) {
+                            form.querySelector('select[name="classe"]').value = classe;
+                            form.addEventListener('submit', handleTeacherFormSubmit);
+                        }
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
             }
         });
     }
@@ -55,9 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- FUNZIONI CHE PREPARANO I FORM DEL CONDUTTORE (DETTAGLIATI) ---
-    function getPhase1FormHTML(classiDisponibili = []) {
-    const optionsHTML = classiDisponibili.map(cl => `<option value="${cl}">${cl}</option>`).join('');
+    function getPhase1FormHTML(classiDisponibili = [], savedData = {}) {
+    const optionsHTML = classiDisponibili.map(cl => 
+        `<option value="${cl}" ${savedData.classe === cl ? 'selected' : ''}>${cl}</option>`
+    ).join('');
+
     return `
         <h3>Fase 1: Griglia di Osservazione Classe</h3>
         <p>Indicare la classe osservata e inserire le annotazioni rilevanti.</p>
@@ -70,39 +114,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 </select>
             </div>
 
-                <div class="teacher-form-section">
-                    <h4>Note su Scheda 1 (Mappa di sé)</h4>
-                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2"></textarea></div>
-                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s1_processo_decisionale" rows="2"></textarea></div>
-                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s1_visione_futura" rows="2"></textarea></div>
-                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s1_organizzazione" rows="2"></textarea></div>
-                </div>
-                <div class="teacher-form-section">
-                    <h4>Note su Scheda 2 (Pensiero sul lavoro)</h4>
-                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s2_autoconsapevolezza" rows="2"></textarea></div>
-                    <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s2_conoscenza_lavoro" rows="2"></textarea></div>
-                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s2_visione_futura" rows="2"></textarea></div>
-                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s2_organizzazione" rows="2"></textarea></div>
-                </div>
-                <div class="teacher-form-section">
-                    <h4>Note su Scheda 3 (Modi di lavorare)</h4>
-                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s3_autoconsapevolezza" rows="2"></textarea></div>
-                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s3_processo_decisionale" rows="2"></textarea></div>
-                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s3_visione_futura" rows="2"></textarea></div>
-                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s3_organizzazione" rows="2"></textarea></div>
-                </div>
-                <div class="teacher-form-section">
-                    <h4>Note su Scheda 4 (Tutte le strade)</h4>
-                    <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s4_autoconsapevolezza" rows="2"></textarea></div>
-                    <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s4_conoscenza_lavoro" rows="2"></textarea></div>
-                    <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s4_processo_decisionale" rows="2"></textarea></div>
-                    <div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2"></textarea></div>
-                    <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2"></textarea></div>
-                </div>
-                <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
-            </form>
-        `;
-    }
+            <div class="teacher-form-section">
+                <h4>Note su Scheda 1 (Mappa di sé)</h4>
+                <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2">${savedData.f1_s1_autoconsapevolezza || ''}</textarea></div>
+                <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s1_processo_decisionale" rows="2">${savedData.f1_s1_processo_decisionale || ''}</textarea></div>
+                <div class="form-group"><label>Visione futura:</label><textarea name="f1_s1_visione_futura" rows="2">${savedData.f1_s1_visione_futura || ''}</textarea></div>
+                <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s1_organizzazione" rows="2">${savedData.f1_s1_organizzazione || ''}</textarea></div>
+            </div>
+
+            <div class="teacher-form-section">
+                <h4>Note su Scheda 2 (Pensiero sul lavoro)</h4>
+                <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s2_autoconsapevolezza" rows="2">${savedData.f1_s2_autoconsapevolezza || ''}</textarea></div>
+                <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s2_conoscenza_lavoro" rows="2">${savedData.f1_s2_conoscenza_lavoro || ''}</textarea></div>
+                <div class="form-group"><label>Visione futura:</label><textarea name="f1_s2_visione_futura" rows="2">${savedData.f1_s2_visione_futura || ''}</textarea></div>
+                <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s2_organizzazione" rows="2">${savedData.f1_s2_organizzazione || ''}</textarea></div>
+            </div>
+
+            <div class="teacher-form-section">
+                <h4>Note su Scheda 3 (Modi di lavorare)</h4>
+                <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s3_autoconsapevolezza" rows="2">${savedData.f1_s3_autoconsapevolezza || ''}</textarea></div>
+                <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s3_processo_decisionale" rows="2">${savedData.f1_s3_processo_decisionale || ''}</textarea></div>
+                <div class="form-group"><label>Visione futura:</label><textarea name="f1_s3_visione_futura" rows="2">${savedData.f1_s3_visione_futura || ''}</textarea></div>
+                <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s3_organizzazione" rows="2">${savedData.f1_s3_organizzazione || ''}</textarea></div>
+            </div>
+
+            <div class="teacher-form-section">
+                <h4>Note su Scheda 4 (Tutte le strade)</h4>
+                <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s4_autoconsapevolezza" rows="2">${savedData.f1_s4_autoconsapevolezza || ''}</textarea></div>
+                <div class="form-group"><label>Conoscenza del mondo del lavoro:</label><textarea name="f1_s4_conoscenza_lavoro" rows="2">${savedData.f1_s4_conoscenza_lavoro || ''}</textarea></div>
+                <div class="form-group"><label>Processo decisionale:</label><textarea name="f1_s4_processo_decisionale" rows="2">${savedData.f1_s4_processo_decisionale || ''}</textarea></div>
+                <div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2">${savedData.f1_s4_visione_futura || ''}</textarea></div>
+                <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2">${savedData.f1_s4_organizzazione || ''}</textarea></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
+        </form>
+    `;
+}
+
 
     function getPhase2FormHTML(studentId, studentName) {
         return `
@@ -148,29 +197,48 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    function getPhase3FormHTML() {
-    const classOptions = availableClasses.map(c => `<option value="${c}">${c}</option>`).join('');
+    function getPhase3FormHTML(savedData = {}) {
+    const classOptions = availableClasses.map(c =>
+        `<option value="${c}" ${savedData.classe === c ? 'selected' : ''}>${c}</option>`
+    ).join('');
+
     return `
         <h3>Fase 3: Scheda di Sintesi Generale</h3>
         <form id="fase3-form">
             <div class="form-group">
                 <label for="fase3_classe">Seleziona la Classe:</label>
                 <select id="fase3_classe" name="classe" required>
-                    <option value="" disabled selected>-- Seleziona --</option>
+                    <option value="">-- Seleziona --</option>
                     ${classOptions}
                 </select>
             </div>
             <hr>
             <p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p>
-            <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3"></textarea></div>
-            <div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3"></textarea></div>
-            <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3"></textarea></div>
-            <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3"></textarea></div>
-            <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3"></textarea></div>
+            <div class="form-group">
+                <label>Sintesi su Autoconsapevolezza:</label>
+                <textarea name="sintesi_autoconsapevolezza" rows="3">${savedData.sintesi_autoconsapevolezza || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Sintesi su Conoscenza del mondo del lavoro:</label>
+                <textarea name="sintesi_conoscenza_lavoro" rows="3">${savedData.sintesi_conoscenza_lavoro || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Sintesi su Processo decisionale:</label>
+                <textarea name="sintesi_processo_decisionale" rows="3">${savedData.sintesi_processo_decisionale || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Sintesi su Visione futura:</label>
+                <textarea name="sintesi_visione_futura" rows="3">${savedData.sintesi_visione_futura || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Sintesi su Organizzazione:</label>
+                <textarea name="sintesi_organizzazione" rows="3">${savedData.sintesi_organizzazione || ''}</textarea>
+            </div>
             <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
         </form>
     `;
 }
+
     
     // Funzione di salvataggio generica per i form del docente
     async function handleTeacherFormSubmit(event) {
