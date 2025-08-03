@@ -1,3 +1,4 @@
+// Variabile condivisa per le classi disponibili
 let availableClasses = [];
 
 // Funzione per recuperare dati salvati
@@ -37,15 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!target) return;
 
             if (target.id === 'show-fase1-btn') {
-                const classe = prompt("Inserisci la classe per cui vuoi modificare o salvare la Fase 1:");
+                const contextId = "default";
                 if (!classe) return;
                 try {
                     const savedData = await fetchSavedTeacherData('fase1', classe);
                     openModal(getPhase1FormHTML(availableClasses, savedData || {}), () => {
                         const form = document.getElementById('fase1-form');
                         if (form) {
-                            form.querySelector('select[name="classe"]').value = classe;
-                            form.addEventListener('submit', handleTeacherFormSubmit);
+                                                        form.addEventListener('submit', handleTeacherFormSubmit);
                         }
                     });
                 } catch (error) {
@@ -54,15 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (target.id === 'show-fase3-btn') {
-                const classe = prompt("Inserisci la classe per cui vuoi modificare o salvare la Fase 3:");
+                const contextId = "default";
                 if (!classe) return;
                 try {
                     const savedData = await fetchSavedTeacherData('fase3', classe);
                     openModal(getPhase3FormHTML(savedData || {}), () => {
                         const form = document.getElementById('fase3-form');
                         if (form) {
-                            form.querySelector('select[name="classe"]').value = classe;
-                            form.addEventListener('submit', handleTeacherFormSubmit);
+                                                        form.addEventListener('submit', handleTeacherFormSubmit);
                         }
                     });
                 } catch (error) {
@@ -98,22 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function getPhase1FormHTML(classiDisponibili = [], savedData = {}) {
-    const optionsHTML = classiDisponibili.map(cl => 
-        `<option value="${cl}" ${savedData.classe === cl ? 'selected' : ''}>${cl}</option>`
-    ).join('');
-
     return `
         <h3>Fase 1: Griglia di Osservazione Classe</h3>
-        <p>Indicare la classe osservata e inserire le annotazioni rilevanti.</p>
+        <p>Indicare le annotazioni rilevanti.</p>
         <form id="fase1-form">
-            <div class="form-group">
-                <label for="classe">Classe di riferimento:</label>
-                <select name="classe" required>
-                    <option value="">-- Seleziona una classe --</option>
-                    ${optionsHTML}
-                </select>
-            </div>
-
             <div class="teacher-form-section">
                 <h4>Note su Scheda 1 (Mappa di sé)</h4>
                 <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2">${savedData.f1_s1_autoconsapevolezza || ''}</textarea></div>
@@ -121,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Visione futura:</label><textarea name="f1_s1_visione_futura" rows="2">${savedData.f1_s1_visione_futura || ''}</textarea></div>
                 <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s1_organizzazione" rows="2">${savedData.f1_s1_organizzazione || ''}</textarea></div>
             </div>
-
             <div class="teacher-form-section">
                 <h4>Note su Scheda 2 (Pensiero sul lavoro)</h4>
                 <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s2_autoconsapevolezza" rows="2">${savedData.f1_s2_autoconsapevolezza || ''}</textarea></div>
@@ -129,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Visione futura:</label><textarea name="f1_s2_visione_futura" rows="2">${savedData.f1_s2_visione_futura || ''}</textarea></div>
                 <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s2_organizzazione" rows="2">${savedData.f1_s2_organizzazione || ''}</textarea></div>
             </div>
-
             <div class="teacher-form-section">
                 <h4>Note su Scheda 3 (Modi di lavorare)</h4>
                 <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s3_autoconsapevolezza" rows="2">${savedData.f1_s3_autoconsapevolezza || ''}</textarea></div>
@@ -137,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Visione futura:</label><textarea name="f1_s3_visione_futura" rows="2">${savedData.f1_s3_visione_futura || ''}</textarea></div>
                 <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s3_organizzazione" rows="2">${savedData.f1_s3_organizzazione || ''}</textarea></div>
             </div>
-
             <div class="teacher-form-section">
                 <h4>Note su Scheda 4 (Tutte le strade)</h4>
                 <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s4_autoconsapevolezza" rows="2">${savedData.f1_s4_autoconsapevolezza || ''}</textarea></div>
@@ -146,11 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-group"><label>Visione futura:</label><textarea name="f1_s4_visione_futura" rows="2">${savedData.f1_s4_visione_futura || ''}</textarea></div>
                 <div class="form-group"><label>Organizzazione:</label><textarea name="f1_s4_organizzazione" rows="2">${savedData.f1_s4_organizzazione || ''}</textarea></div>
             </div>
-
             <button type="submit" class="submit-btn">Salva Griglia Fase 1</button>
         </form>
     `;
 }
+
 
 
     function getPhase2FormHTML(studentId, studentName) {
