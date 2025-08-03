@@ -30,7 +30,7 @@ exports.handler = async (event) => {
     const decodedToken = await admin.auth().verifyIdToken(token);
     const teacherUid = decodedToken.uid;
     const schoolId = process.env.SCHOOL_ID;
-    const { formType, contextId, data } = JSON.parse(event.body);
+    const { formType, studentId: contextId = 'default', data } = JSON.parse(event.body);
 
     if (!schoolId || !formType || !contextId || !data) {
       throw new Error('Dati insufficienti per il salvataggio.');
