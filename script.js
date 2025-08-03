@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const payload = {
                 formType: form.id.replace('-form', ''), // es. 'fase1'
-                studentId: form.dataset.studentid || null,
+                studentId: form.dataset.studentid || 'default',
                 data: data
             };
 
@@ -239,11 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Il resto del tuo codice da 399 righe (initializeQuestionnaire, dashboard, etc.)
-    // va qui, esattamente come me lo hai fornito.
-    // Ho solo aggiunto la logica modale e le funzioni getPhase...HTML all'inizio.
-    
-    // Inizio del tuo codice
     function initializeQuestionnaire() {
         if (isQuestionnaireInitialized) return;
         const controlsContent = document.getElementById('controls-content');
