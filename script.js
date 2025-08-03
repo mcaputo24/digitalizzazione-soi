@@ -543,18 +543,20 @@ document.addEventListener('DOMContentLoaded', () => {
       ${html}
     </div>
     <div class="split-modal-right">
-console.log(data);
       ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.fase2 || {})}
     </div>
   </div>
 `, () => {
-  attachPhase2Calculators();
-  document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
+    attachPhase2Calculators();
 
-  // 🔄 Forza aggiornamento conteggi anche alla riapertura
-  const form = document.getElementById('fase2-form');
-  const checkedInputs = form?.querySelectorAll('input[type="radio"]:checked') || [];
-  checkedInputs.forEach(input => input.dispatchEvent(new Event('change')));
+    const form = document.getElementById('fase2-form');
+    if (form) {
+        // Forza aggiornamento conteggi al caricamento iniziale
+        const checkedInputs = form.querySelectorAll('input[type="radio"]:checked');
+        checkedInputs.forEach(input => input.dispatchEvent(new Event('change')));
+
+        form.addEventListener('submit', handleTeacherFormSubmit);
+    }
 });
 });
 
@@ -571,37 +573,47 @@ console.log(data);
         organizzazione: { p: 0, d: 0, total: 4, id: 'orga' }
     };
 
-    function calculateSummary() {
-        // Reset contatori
+    const recalculate = () => {
         Object.values(dimensions).forEach(dim => { dim.p = 0; dim.d = 0; });
+
         const checkedRadios = form.querySelectorAll('input[type="radio"]:checked');
         checkedRadios.forEach(radio => {
             const dim = radio.dataset.dim;
-            if (radio.value === 'presente') { dimensions[dim].p++; } 
-            else if (radio.value === 'potenziare') { dimensions[dim].d++; }
+            if (dimensions[dim]) {
+                if (radio.value === 'presente') dimensions[dim].p++;
+                else if (radio.value === 'potenziare') dimensions[dim].d++;
+            }
         });
+
         Object.values(dimensions).forEach(dim => {
             const p_el = document.getElementById(`sum_${dim.id}_p`);
             const d_el = document.getElementById(`sum_${dim.id}_d`);
             const res_el = document.getElementById(`res_${dim.id}`);
-            if(p_el) p_el.value = dim.p;
-            if(d_el) d_el.value = dim.d;
-            let result = '';
-            if ((dim.p + dim.d) > 0) { result = (dim.p >= dim.d) ? 'PRESENTE' : 'DA POTENZIARE'; }
-            if(res_el) res_el.value = result;
+            if (p_el) p_el.value = dim.p;
+            if (d_el) d_el.value = dim.d;
+            if (res_el) {
+                if ((dim.p + dim.d) > 0) {
+                    res_el.value = (dim.p >= dim.d) ? 'PRESENTE' : 'DA POTENZIARE';
+                } else {
+                    res_el.value = '';
+                }
+            }
         });
-    }
+    };
 
+    // Innesca ricalcolo ogni volta che cambia un radio
     form.addEventListener('change', (e) => {
         if (e.target.type === 'radio') {
-            calculateSummary();
+            recalculate();
         }
     });
 
-    // Calcolo iniziale dopo caricamento valori
-    calculateSummary();
+    // Innesca ricalcolo al primo caricamento dati
+    setTimeout(() => {
+        const checkedRadios = form.querySelectorAll('input[type="radio"]:checked');
+        checkedRadios.forEach(input => input.dispatchEvent(new Event('change')));
+    }, 50);
 }
-
 
     function handleRouteChange() {
         const hash = window.location.hash;
