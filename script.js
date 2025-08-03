@@ -537,25 +537,27 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.innerHTML = html;
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-                openModal(`
+    openModal(`
   <div class="split-modal-container">
     <div class="split-modal-left">
       ${html}
     </div>
     <div class="split-modal-right">
+console.log(data);
       ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.fase2 || {})}
     </div>
   </div>
 `, () => {
   attachPhase2Calculators();
   document.getElementById('fase2-form')?.addEventListener('submit', handleTeacherFormSubmit);
+
+  // 🔄 Forza aggiornamento conteggi anche alla riapertura
+  const form = document.getElementById('fase2-form');
+  const checkedInputs = form?.querySelectorAll('input[type="radio"]:checked') || [];
+  checkedInputs.forEach(input => input.dispatchEvent(new Event('change')));
 });
-            });
-        } catch (error) {
-            title.textContent = "Errore";
-            contentDiv.innerHTML = `<p class="error-message">Impossibile caricare i dati dello studente.</p>`;
-        }
-    }
+});
+
 
     function attachPhase2Calculators() {
     const form = document.getElementById('fase2-form');
