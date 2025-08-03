@@ -38,36 +38,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!target) return;
 
             if (target.id === 'show-fase1-btn') {
-                const contextId = "default";
-                if (!classe) return;
-                try {
-                    const savedData = await fetchSavedTeacherData('fase1', classe);
-                    openModal(getPhase1FormHTML(availableClasses, savedData || {}), () => {
-                        const form = document.getElementById('fase1-form');
-                        if (form) {
-                                                        form.addEventListener('submit', handleTeacherFormSubmit);
-                        }
-                    });
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+    const contextId = "default";
+    try {
+        const savedData = await fetchSavedTeacherData('fase1', contextId);
+        openModal(getPhase1FormHTML(availableClasses, savedData || {}), () => {
+            const form = document.getElementById('fase1-form');
+            if (form) form.addEventListener('submit', handleTeacherFormSubmit);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 
             if (target.id === 'show-fase3-btn') {
-                const contextId = "default";
-                if (!classe) return;
-                try {
-                    const savedData = await fetchSavedTeacherData('fase3', classe);
-                    openModal(getPhase3FormHTML(savedData || {}), () => {
-                        const form = document.getElementById('fase3-form');
-                        if (form) {
-                                                        form.addEventListener('submit', handleTeacherFormSubmit);
-                        }
-                    });
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+    const contextId = "default";
+    try {
+        const savedData = await fetchSavedTeacherData('fase3', contextId);
+        openModal(getPhase3FormHTML(savedData || {}), () => {
+            const form = document.getElementById('fase3-form');
+            if (form) form.addEventListener('submit', handleTeacherFormSubmit);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
         });
     }
 
@@ -182,46 +177,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getPhase3FormHTML(savedData = {}) {
-    const classOptions = availableClasses.map(c =>
-        `<option value="${c}" ${savedData.classe === c ? 'selected' : ''}>${c}</option>`
-    ).join('');
-
     return `
         <h3>Fase 3: Scheda di Sintesi Generale</h3>
         <form id="fase3-form">
-            <div class="form-group">
-                <label for="fase3_classe">Seleziona la Classe:</label>
-                <select id="fase3_classe" name="classe" required>
-                    <option value="">-- Seleziona --</option>
-                    ${classOptions}
-                </select>
-            </div>
             <hr>
             <p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p>
-            <div class="form-group">
-                <label>Sintesi su Autoconsapevolezza:</label>
-                <textarea name="sintesi_autoconsapevolezza" rows="3">${savedData.sintesi_autoconsapevolezza || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Sintesi su Conoscenza del mondo del lavoro:</label>
-                <textarea name="sintesi_conoscenza_lavoro" rows="3">${savedData.sintesi_conoscenza_lavoro || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Sintesi su Processo decisionale:</label>
-                <textarea name="sintesi_processo_decisionale" rows="3">${savedData.sintesi_processo_decisionale || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Sintesi su Visione futura:</label>
-                <textarea name="sintesi_visione_futura" rows="3">${savedData.sintesi_visione_futura || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Sintesi su Organizzazione:</label>
-                <textarea name="sintesi_organizzazione" rows="3">${savedData.sintesi_organizzazione || ''}</textarea>
-            </div>
+            <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3">${savedData.sintesi_autoconsapevolezza || ''}</textarea></div>
+            <div class="form-group"><label>Sintesi su Conoscenza del mondo del lavoro:</label><textarea name="sintesi_conoscenza_lavoro" rows="3">${savedData.sintesi_conoscenza_lavoro || ''}</textarea></div>
+            <div class="form-group"><label>Sintesi su Processo decisionale:</label><textarea name="sintesi_processo_decisionale" rows="3">${savedData.sintesi_processo_decisionale || ''}</textarea></div>
+            <div class="form-group"><label>Sintesi su Visione futura:</label><textarea name="sintesi_visione_futura" rows="3">${savedData.sintesi_visione_futura || ''}</textarea></div>
+            <div class="form-group"><label>Sintesi su Organizzazione:</label><textarea name="sintesi_organizzazione" rows="3">${savedData.sintesi_organizzazione || ''}</textarea></div>
             <button type="submit" class="submit-btn">Salva Sintesi Fase 3</button>
         </form>
     `;
 }
+
 
     
     // Funzione di salvataggio generica per i form del docente
