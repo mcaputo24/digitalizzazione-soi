@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function getPhase2FormHTML(studentId, studentName, savedData = {}) {
-    const checked = (name, value) => savedData[name] === value ? 'checked' : '';
+    const isChecked = (name, value) => savedData[name] === value ? 'checked' : '';
     return `
         <h3>Fase 2: Scheda di Sintesi per ${studentName}</h3>
         <p>Indicare per ogni dimensione se è "Presente" o "Da potenziare".</p>
@@ -142,66 +142,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 <thead><tr><th>SCHEDE</th><th>DIMENSIONI</th><th>Presente</th><th>Da potenziare</th></tr></thead>
                 <tbody>
                     <tr><td rowspan="4">Scheda 1</td><td>Autoconsapevolezza</td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_auto" value="presente" ${checked('f2_s1_auto', 'presente')}></td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_auto" value="potenziare" ${checked('f2_s1_auto', 'potenziare')}></td></tr>
+                        <td class="check-cell"><input type="radio" name="f2_s1_auto" value="presente" ${isChecked('f2_s1_auto', 'presente')}></td>
+                        <td class="check-cell"><input type="radio" name="f2_s1_auto" value="potenziare" ${isChecked('f2_s1_auto', 'potenziare')}></td></tr>
                     <tr><td>Processo decisionale</td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_proc" value="presente" ${checked('f2_s1_proc', 'presente')}></td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_proc" value="potenziare" ${checked('f2_s1_proc', 'potenziare')}></td></tr>
+                        <td class="check-cell"><input type="radio" name="f2_s1_proc" value="presente" ${isChecked('f2_s1_proc', 'presente')}></td>
+                        <td class="check-cell"><input type="radio" name="f2_s1_proc" value="potenziare" ${isChecked('f2_s1_proc', 'potenziare')}></td></tr>
                     <tr><td>Visione futura</td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_visi" value="presente" ${checked('f2_s1_visi', 'presente')}></td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_visi" value="potenziare" ${checked('f2_s1_visi', 'potenziare')}></td></tr>
+                        <td class="check-cell"><input type="radio" name="f2_s1_visi" value="presente" ${isChecked('f2_s1_visi', 'presente')}></td>
+                        <td class="check-cell"><input type="radio" name="f2_s1_visi" value="potenziare" ${isChecked('f2_s1_visi', 'potenziare')}></td></tr>
                     <tr><td>Organizzazione</td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_orga" value="presente" ${checked('f2_s1_orga', 'presente')}></td>
-                        <td class="check-cell"><input type="radio" name="f2_s1_orga" value="potenziare" ${checked('f2_s1_orga', 'potenziare')}></td></tr>
+                        <td class="check-cell"><input type="radio" name="f2_s1_orga" value="presente" ${isChecked('f2_s1_orga', 'presente')}></td>
+                        <td class="check-cell"><input type="radio" name="f2_s1_orga" value="potenziare" ${isChecked('f2_s1_orga', 'potenziare')}></td></tr>
 
                     <tr><td rowspan="4">Scheda 2</td><td>Autoconsapevolezza</td>
-    <td class="check-cell"><input type="radio" name="f2_s2_auto" value="presente" ${checked('f2_s2_auto', 'presente')} data-dim="autoconsapevolezza"></td>
-    <td class="check-cell"><input type="radio" name="f2_s2_auto" value="potenziare" ${checked('f2_s2_auto', 'potenziare')} data-dim="autoconsapevolezza"></td></tr>
+    <td class="check-cell"><input type="radio" name="f2_s2_auto" value="presente" ${isChecked('f2_s2_auto', 'presente')} data-dim="autoconsapevolezza"></td>
+    <td class="check-cell"><input type="radio" name="f2_s2_auto" value="potenziare" ${isChecked('f2_s2_auto', 'potenziare')} data-dim="autoconsapevolezza"></td></tr>
 <tr><td>Conoscenza mondo lavoro</td>
-    <td class="check-cell"><input type="radio" name="f2_s2_cono" value="presente" ${checked('f2_s2_cono', 'presente')} data-dim="conoscenza_lavoro"></td>
-    <td class="check-cell"><input type="radio" name="f2_s2_cono" value="potenziare" ${checked('f2_s2_cono', 'potenziare')} data-dim="conoscenza_lavoro"></td></tr>
+    <td class="check-cell"><input type="radio" name="f2_s2_cono" value="presente" ${isChecked('f2_s2_cono', 'presente')} data-dim="conoscenza_lavoro"></td>
+    <td class="check-cell"><input type="radio" name="f2_s2_cono" value="potenziare" ${isChecked('f2_s2_cono', 'potenziare')} data-dim="conoscenza_lavoro"></td></tr>
 <tr><td>Visione futura</td>
-    <td class="check-cell"><input type="radio" name="f2_s2_visi" value="presente" ${checked('f2_s2_visi', 'presente')} data-dim="visione_futura"></td>
-    <td class="check-cell"><input type="radio" name="f2_s2_visi" value="potenziare" ${checked('f2_s2_visi', 'potenziare')} data-dim="visione_futura"></td></tr>
+    <td class="check-cell"><input type="radio" name="f2_s2_visi" value="presente" ${isChecked('f2_s2_visi', 'presente')} data-dim="visione_futura"></td>
+    <td class="check-cell"><input type="radio" name="f2_s2_visi" value="potenziare" ${isChecked('f2_s2_visi', 'potenziare')} data-dim="visione_futura"></td></tr>
 <tr><td>Organizzazione</td>
-    <td class="check-cell"><input type="radio" name="f2_s2_orga" value="presente" ${checked('f2_s2_orga', 'presente')} data-dim="organizzazione"></td>
-    <td class="check-cell"><input type="radio" name="f2_s2_orga" value="potenziare" ${checked('f2_s2_orga', 'potenziare')} data-dim="organizzazione"></td></tr>
+    <td class="check-cell"><input type="radio" name="f2_s2_orga" value="presente" ${isChecked('f2_s2_orga', 'presente')} data-dim="organizzazione"></td>
+    <td class="check-cell"><input type="radio" name="f2_s2_orga" value="potenziare" ${isChecked('f2_s2_orga', 'potenziare')} data-dim="organizzazione"></td></tr>
 
                     <tr><td rowspan="4">Scheda 3</td><td>Autoconsapevolezza</td>
-<td class="check-cell"><input type="radio" name="f2_s3_auto" value="presente" data-dim="autoconsapevolezza" ${data?.f2_s3_auto === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s3_auto" value="potenziare" data-dim="autoconsapevolezza" ${data?.f2_s3_auto === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s3_auto" value="presente" ${isChecked('f2_s3_auto', 'presente')} data-dim="autoconsapevolezza"></td>
+<td class="check-cell"><input type="radio" name="f2_s3_auto" value="potenziare" ${isChecked('f2_s3_auto', 'potenziare')} data-dim="autoconsapevolezza"></td></tr>
 
 <tr><td>Processo decisionale</td>
-<td class="check-cell"><input type="radio" name="f2_s3_proc" value="presente" data-dim="processo_decisionale" ${data?.f2_s3_proc === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s3_proc" value="potenziare" data-dim="processo_decisionale" ${data?.f2_s3_proc === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s3_proc" value="presente" ${isChecked('f2_s3_proc', 'presente')} data-dim="processo_decisionale"></td>
+<td class="check-cell"><input type="radio" name="f2_s3_proc" value="potenziare" ${isChecked('f2_s3_proc', 'potenziare')} data-dim="processo_decisionale"></td></tr>
 
 <tr><td>Visione futura</td>
-<td class="check-cell"><input type="radio" name="f2_s3_visi" value="presente" data-dim="visione_futura" ${data?.f2_s3_visi === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s3_visi" value="potenziare" data-dim="visione_futura" ${data?.f2_s3_visi === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s3_visi" value="presente" ${isChecked('f2_s3_visi', 'presente')} data-dim="visione_futura"></td>
+<td class="check-cell"><input type="radio" name="f2_s3_visi" value="potenziare" ${isChecked('f2_s3_visi', 'potenziare')} data-dim="visione_futura"></td></tr>
 
 <tr><td>Organizzazione</td>
-<td class="check-cell"><input type="radio" name="f2_s3_orga" value="presente" data-dim="organizzazione" ${data?.f2_s3_orga === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s3_orga" value="potenziare" data-dim="organizzazione" ${data?.f2_s3_orga === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s3_orga" value="presente" ${isChecked('f2_s3_orga', 'presente')} data-dim="organizzazione"></td>
+<td class="check-cell"><input type="radio" name="f2_s3_orga" value="potenziare" ${isChecked('f2_s3_orga', 'potenziare')} data-dim="organizzazione"></td></tr>
+
 
                         <tr><td rowspan="5">Scheda 4</td><td>Autoconsapevolezza</td>
-<td class="check-cell"><input type="radio" name="f2_s4_auto" value="presente" data-dim="autoconsapevolezza" ${data?.f2_s4_auto === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s4_auto" value="potenziare" data-dim="autoconsapevolezza" ${data?.f2_s4_auto === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s4_auto" value="presente" ${isChecked('f2_s4_auto', 'presente')} data-dim="autoconsapevolezza"></td>
+<td class="check-cell"><input type="radio" name="f2_s4_auto" value="potenziare" ${isChecked('f2_s4_auto', 'potenziare')} data-dim="autoconsapevolezza"></td></tr>
 
 <tr><td>Conoscenza mondo lavoro</td>
-<td class="check-cell"><input type="radio" name="f2_s4_cono" value="presente" data-dim="conoscenza_lavoro" ${data?.f2_s4_cono === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s4_cono" value="potenziare" data-dim="conoscenza_lavoro" ${data?.f2_s4_cono === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s4_cono" value="presente" ${isChecked('f2_s4_cono', 'presente')} data-dim="conoscenza_lavoro"></td>
+<td class="check-cell"><input type="radio" name="f2_s4_cono" value="potenziare" ${isChecked('f2_s4_cono', 'potenziare')} data-dim="conoscenza_lavoro"></td></tr>
 
 <tr><td>Processo decisionale</td>
-<td class="check-cell"><input type="radio" name="f2_s4_proc" value="presente" data-dim="processo_decisionale" ${data?.f2_s4_proc === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s4_proc" value="potenziare" data-dim="processo_decisionale" ${data?.f2_s4_proc === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s4_proc" value="presente" ${isChecked('f2_s4_proc', 'presente')} data-dim="processo_decisionale"></td>
+<td class="check-cell"><input type="radio" name="f2_s4_proc" value="potenziare" ${isChecked('f2_s4_proc', 'potenziare')} data-dim="processo_decisionale"></td></tr>
 
 <tr><td>Visione futura</td>
-<td class="check-cell"><input type="radio" name="f2_s4_visi" value="presente" data-dim="visione_futura" ${data?.f2_s4_visi === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s4_visi" value="potenziare" data-dim="visione_futura" ${data?.f2_s4_visi === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s4_visi" value="presente" ${isChecked('f2_s4_visi', 'presente')} data-dim="visione_futura"></td>
+<td class="check-cell"><input type="radio" name="f2_s4_visi" value="potenziare" ${isChecked('f2_s4_visi', 'potenziare')} data-dim="visione_futura"></td></tr>
 
 <tr><td>Organizzazione</td>
-<td class="check-cell"><input type="radio" name="f2_s4_orga" value="presente" data-dim="organizzazione" ${data?.f2_s4_orga === 'presente' ? 'checked' : ''}></td>
-<td class="check-cell"><input type="radio" name="f2_s4_orga" value="potenziare" data-dim="organizzazione" ${data?.f2_s4_orga === 'potenziare' ? 'checked' : ''}></td></tr>
+<td class="check-cell"><input type="radio" name="f2_s4_orga" value="presente" ${isChecked('f2_s4_orga', 'presente')} data-dim="organizzazione"></td>
+<td class="check-cell"><input type="radio" name="f2_s4_orga" value="potenziare" ${isChecked('f2_s4_orga', 'potenziare')} data-dim="organizzazione"></td></tr>
 
                     </tbody>
                 </table>
