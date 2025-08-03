@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `
         <h3>Fase 1: Griglia di Osservazione Classe</h3>
         <p>Indicare le annotazioni rilevanti.</p>
-        <form id="fase1-form">
+        <form id="fase1-form" data-studentid="default">
             <div class="teacher-form-section">
                 <h4>Note su Scheda 1 (Mappa di sé)</h4>
                 <div class="form-group"><label>Autoconsapevolezza:</label><textarea name="f1_s1_autoconsapevolezza" rows="2">${savedData.f1_s1_autoconsapevolezza || ''}</textarea></div>
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getPhase3FormHTML(savedData = {}) {
     return `
         <h3>Fase 3: Scheda di Sintesi Generale</h3>
-        <form id="fase3-form">
+        <form id="fase3-form" data-studentid="default">
             <hr>
             <p>Effettuare una sintesi dei risultati emersi per l'intero gruppo classe.</p>
             <div class="form-group"><label>Sintesi su Autoconsapevolezza:</label><textarea name="sintesi_autoconsapevolezza" rows="3">${savedData.sintesi_autoconsapevolezza || ''}</textarea></div>
