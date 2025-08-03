@@ -130,8 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 }
 
-
-
     function getPhase2FormHTML(studentId, studentName, savedData = {}) {
     const isChecked = (name, value) => savedData[name] === value ? 'checked' : '';
     return `
@@ -545,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ${html}
     </div>
     <div class="split-modal-right">
-      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.scheda_fase2 || {})}
+      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.fase2 || {})}
     </div>
   </div>
 `, () => {
