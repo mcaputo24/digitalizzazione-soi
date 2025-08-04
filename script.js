@@ -36,8 +36,6 @@ console.log('▶️ initMap chiamata', document.getElementById('cy'), document.g
           'color': '#fff',
           'text-outline-width': 2,
           'background-color': '#888',
-          'width': 'label',
-          'height': 'label',
           'padding': '10px',
           'shape': 'round-rectangle',
           'text-wrap': 'wrap',
