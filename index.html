@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digitalizzazione SOI - Questionario</title>
     <link rel="stylesheet" href="style.css">
-    
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
@@ -15,7 +15,7 @@
 <body>
     <header>
         <img src="logo.png" alt="Logo Sviluppo Lavoro Italia">
-        <h1>Rilevazione dei bisogni di orientamento</h1>
+        <h1>Sistema di Orientamento Integrato</h1>
     </header>
 
     <main>
@@ -23,9 +23,47 @@
             <div class="choice-box">
                 <h2>Benvenuto/a</h2>
                 <p>Seleziona il percorso che vuoi iniziare:</p>
-                <a href="#/studente/anno-1" class="choice-button">Questionario Studente (I Anno)</a>
-                <a href="#/studente/anno-2-3" class="choice-button disabled">Questionario Studente (II e III Anno) - Prossimamente</a>
-                <a href="#/docente/login" class="choice-button">Accesso Docente</a>
+                <a href="#/studente/fase1-anno1" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno I</a>
+                <a href="#/studente/fase1-anno2" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno II</a>
+                <a href="#/studente/fase1-anno3" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno III</a>
+                <a href="#/studente/fase3-anno1" class="choice-button">Fase 3 – Sintesi dell’esperienza anno I</a>
+                <a href="#/studente/fase3-anno2" class="choice-button">Fase 3 – Sintesi dell’esperienza anno II</a>
+                <a href="#/studente/fase3-anno3" class="choice-button">Fase 3 – Sintesi dell’esperienza anno III</a>
+                <a href="#/studente/fase4" class="choice-button">Fase 4 – Rielaborazione dell’esperienza</a>
+                <a href="#/docente" class="choice-button">Accesso Docenti</a>
+            </div>
+        </div>
+
+        <!-- Qui iniziano i blocchi separati per fase 1 di anno I, II, III -->
+        <div id="questionnaire-fase1-anno1" class="view" style="display: none;">
+            <!-- Inserire qui il contenuto originale del questionario del I anno -->
+        </div>
+
+        <div id="questionnaire-fase1-anno2" class="view" style="display: none;">
+            <!-- Verrà duplicato e adattato il contenuto, inclusa scheda 5 -->
+        </div>
+
+        <div id="questionnaire-fase1-anno3" class="view" style="display: none;">
+            <!-- Verrà duplicato e adattato il contenuto, inclusa scheda 5 -->
+        </div>
+    <header>
+        <img src="logo.png" alt="Logo Sviluppo Lavoro Italia">
+        <h1>Sistema di Orientamento Integrato</h1>
+    </header>
+
+    <main>
+        <div id="home-view" class="view">
+            <div class="choice-box">
+                <h2>Benvenuto/a</h2>
+		<p>Seleziona il percorso che vuoi iniziare:</p>
+		<a href="#/studente/fase1-anno1" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno I</a>
+		<a href="#/studente/fase1-anno2" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno II</a>
+		<a href="#/studente/fase1-anno3" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno III</a>
+		<a href="#/studente/fase3-anno1" class="choice-button">Fase 3 – Sintesi dell’esperienza anno I</a>
+		<a href="#/studente/fase3-anno2" class="choice-button">Fase 3 – Sintesi dell’esperienza anno II</a>
+		<a href="#/studente/fase3-anno3" class="choice-button">Fase 3 – Sintesi dell’esperienza anno III</a>
+		<a href="#/studente/fase4" class="choice-button">Fase 4 – Rielaborazione dell’esperienza</a>
+		<a href="#/docente" class="choice-button">Accesso Docenti</a>
             </div>
         </div>
 
