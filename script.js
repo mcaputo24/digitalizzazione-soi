@@ -548,6 +548,7 @@ const payload = {
       ${html}
     </div>
     <div class="split-modal-right">
+console.log("Dati ricevuti per la Fase 2:", data.fase2);
       ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.fase2 || {})}
     </div>
   </div>
