@@ -331,16 +331,3 @@ const formsConfig = {
 
 // global
 window.formsConfig = formsConfig;
-
-// ───────────────────────────────────────────────────────────
-// Export globale della configurazione
-// ───────────────────────────────────────────────────────────
-const formsConfig = {
-  fase1: {
-    anno1: { schede: anno1Schede },
-    anno2: { schede: anno2Schede }
-  }
-};
-
-// Rendilo disponibile globalmente
-window.formsConfig = formsConfig;
