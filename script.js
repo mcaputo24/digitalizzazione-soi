@@ -507,7 +507,11 @@ const payload = {
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
             
             const data = await response.json();
+console.log("📦 Dati ricevuti da Firebase:", JSON.stringify(data, null, 2));
+
 	    const savedPhase2 = data.fase2 || {};
+console.log("📤 savedPhase2 passato a getPhase2FormHTML:", JSON.stringify(savedPhase2, null, 2));
+
           
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
