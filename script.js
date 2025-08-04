@@ -91,6 +91,8 @@ console.log('▶️ initMap chiamata', document.getElementById('cy'), document.g
     ],
     layout: { name: 'preset' }
   });
+console.log('▶️ cy instance:', cy);
+console.log('▶️ numero di nodi iniziali:', cy.nodes().length);
 
   // forzo il resize in caso il container fosse stato nascosto
   cy.resize();
