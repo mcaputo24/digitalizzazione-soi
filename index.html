@@ -18,615 +18,41 @@
         <h1>Sistema di Orientamento Integrato</h1>
     </header>
 
-    <main>
-        <div id="home-view" class="view">
-            <div class="choice-box">
-                <h2>Benvenuto/a</h2>
-                <p>Seleziona il percorso che vuoi iniziare:</p>
-                <a href="#/studente/fase1-anno1" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno I</a>
-                <a href="#/studente/fase1-anno2" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno II</a>
-                <a href="#/studente/fase1-anno3" class="choice-button">Fase 1 – Rilevazione bisogni di orientamento anno III</a>
-                <a href="#/studente/fase3-anno1" class="choice-button">Fase 3 – Sintesi dell’esperienza anno I</a>
-                <a href="#/studente/fase3-anno2" class="choice-button">Fase 3 – Sintesi dell’esperienza anno II</a>
-                <a href="#/studente/fase3-anno3" class="choice-button">Fase 3 – Sintesi dell’esperienza anno III</a>
-                <a href="#/studente/fase4" class="choice-button">Fase 4 – Rielaborazione dell’esperienza</a>
-                <a href="#/docente" class="choice-button">Accesso Docenti</a>
-            </div>
-        </div>
-
-        <!-- Qui iniziano i blocchi separati per fase 1 di anno I, II, III -->
-        <div id="questionnaire-fase1-anno1" class="view" style="display: none;">
-            <p class="questionnaire-subtitle">Classi I delle scuole secondarie di I grado</p>
-            <form id="soi-form">
-                <fieldset>
-                    <legend>Dati dello Studente</legend>
-                    <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="cognome">Cognome:</label><input type="text" id="cognome" name="cognome" required></div>
-                    <div class="form-group"><label for="classe">Classe:</label><input type="text" id="classe" name="classe" required></div>
-                    <div class="form-group"><label for="data">Data:</label><input type="date" id="data" name="data" required></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
-                    <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
-                    <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
-                    <div class="grid-inputs"><input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10."></div>
-                    <hr>
-                    <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
-                    <div class="image-container"><p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale"></div>
-                    <div class="map-section">
-                        <div id="cy"></div>
-                        <div id="map-controls"><h3>Pannello di Controllo</h3><div id="controls-content"></div></div>
-                    </div>
-                    <hr>
-                    <details class="suggestions-container"><summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
-                        <table>
-                            <thead><tr><th>CARATTERISTICHE PERSONALI</th></tr></thead>
-                            <tbody>
-                                <tr><td>Corretto</td><td>Protettivo</td><td>Intelligente</td></tr>
-                                <tr><td>Paziente</td><td>Collaborativo</td><td>Capace di assumere responsabilità</td></tr>
-                                <tr><td>Autoritario</td><td>Estroverso</td><td>Simpatico</td></tr>
-                                <tr><td>Avventuroso</td><td>Fidato</td><td>Sincero</td></tr>
-                                <tr><td>Benevolo</td><td>Fiducioso negli altri</td><td>Socievole</td></tr>
-                                <tr><td>Calcolatore</td><td>Generoso</td><td>Creativo</td></tr>
-                                <tr><td>Calmo</td><td>Adattabile</td><td>Tenace</td></tr>
-                                <tr><td>Solidale</td><td>Intraprendente</td><td>Tollerante</td></tr>
-                                <tr><td>Capace di cambiamento</td><td>Intuitivo</td><td>Umile</td></tr>
-                                <tr><td>Competente</td><td>Portato al risultato</td><td>Sensibile</td></tr>
-                                <tr><td>Comunicativo</td><td>Preciso</td><td>Affidabile</td></tr>
-                                <tr><td>Leale</td><td>Coinvolgente</td><td>Deciso</td></tr>
-                                <tr><td>Costante</td><td>Razionale</td><td>Sicuro di sé</td></tr>
-                            </tbody>
-                        </table>
-                    </details>
-                    <hr>
-                    <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
-                    <div class="form-group"><label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label><textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label><textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 2 – UN PENSIERO SUL LAVORO</legend>
-                    <div class="form-group"><label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label><textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label><textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label><textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label><textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 3 – MODI DI LAVORARE</legend>
-                    <div class="instruction-text">
-                        <p>Esistono quattro principali modi diversi di lavorare; quasi tutte le professioni o i lavori si svolgono lavorando un po' in un modo un po' in un altro: in genere, però, prevalgono le caratteristiche di uno di questi modi.</p>
-                        <p><strong>... con la GENTE:</strong> quando si hanno frequenti o continui rapporti con molte persone (con i clienti, i pazienti, gli allievi...). Star bene con la gente ed avere facilità di rapporti con le persone è una caratteristica indispensabile per tanti professionisti diversi: gli insegnanti, i negozianti, i medici, i parrucchieri...</p>
-                        <p><strong>... con i DATI:</strong> quando si ha a che fare con la registrazione, il calcolo, l'elaborazione di dati statistici, dati anagrafici, dati di mercato, calcoli numerici... Lavorano con i dati soprattutto gli impiegati amministrativi, i ragionieri, i segretari, i ricercatori di mercato, gli economisti...</p>
-                        <p><strong>... con le IDEE:</strong> quando si producono concetti astratti, idee artistiche, scientifiche... o si riflette su di esse. In tutte le professioni si deve in qualche modo lavorare col cervello e quindi con le idee, ma certi lavori richiedono una capacità particolarmente sviluppata di riflettere, ragionare, inventare: è il caso, per esempio degli artisti, degli scienziati, dei filosofi...</p>
-                        <p><strong>... con le COSE:</strong> quando si debbono manipolare dei materiali o degli oggetti per produrre o riparare manufatti (materiali come il legno, il ferro, la stoffa... oggetti come l'automobile, la televisione...). Lavorano soprattutto con le cose gli agricoltori o gli artigiani come i sarti, i fabbri, i ceramisti, gli orafi...</p>
-                        <hr>
-                        <p>Ora, prova a compilare il questionario seguente, indicando quali modalità senti più tue (ti potrebbero piacere di più, pensando a come sei fatto).</p>
-                    </div>
-                    <h4 class="centered-subtitle">QUESTIONARIO DI AUTOVALUTAZIONE</h4>
-                    <p>Segna con una crocetta le affermazioni che descrivono chi sei e i tuoi interessi.</p>
-                    <div class="autovalutazione-container">
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LA GENTE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="gente_1" data-category="gente"> Nelle interrogazioni orali ti esprimi con disinvoltura</label>
-                                <label><input type="checkbox" name="gente_2" data-category="gente"> A scuola, ti piace lavorare in gruppo</label>
-                                <label><input type="checkbox" name="gente_3" data-category="gente"> Non resisti a lungo in un posto in cui non puoi parlare</label>
-                                <label><input type="checkbox" name="gente_4" data-category="gente"> Tutti ti dicono che sei garbato e cordiale</label>
-                                <label><input type="checkbox" name="gente_5" data-category="gente"> Vai d'accordo con tutti, anche con le persone che hai appena conosciuto</label>
-                                <label><input type="checkbox" name="gente_6" data-category="gente"> Ti capita spesso di persuadere gli altri a fare ciò che vuoi tu</label>
-                                <label><input type="checkbox" name="gente_7" data-category="gente"> Ammiri molto le persone che aiutano la gente che ha bisogno</label>
-                                <label><input type="checkbox" name="gente_8" data-category="gente"> Ti capita spesso di aiutare qualche compagno in difficoltà</label>
-                                <label><input type="checkbox" name="gente_9" data-category="gente"> Sei disponibile ad ascoltare le persone che ti parlano dei loro problemi</label>
-                                <label><input type="checkbox" name="gente_10" data-category="gente"> Ti piacerebbe svolgere un servizio volontario per aiutare delle persone in difficoltà</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON I DATI</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="dati_1" data-category="dati"> Ti piace fare i calcoli di matematica</label>
-                                <label><input type="checkbox" name="dati_2" data-category="dati"> Sei capace di seguire con precisione delle istruzioni, anche lunghe e complesse</label>
-                                <label><input type="checkbox" name="dati_3" data-category="dati"> Non sopporti il disordine e la confusione</label>
-                                <label><input type="checkbox" name="dati_4" data-category="dati"> Ti piace organizzare bene le tue attività</label>
-                                <label><input type="checkbox" name="dati_5" data-category="dati"> Ti piace costruire grafici e diagrammi</label>
-                                <label><input type="checkbox" name="dati_6" data-category="dati"> Quando devi ricordare delle informazioni, le organizzi con degli schemi, degli elenchi...</label>
-                                <label><input type="checkbox" name="dati_7" data-category="dati"> A scuola i professori ti affidano volentieri degli incarichi che richiedono attenzione e precisione</label>
-                                <label><input type="checkbox" name="dati_8" data-category="dati"> Per presentare un compito ordinato sei disposto a rifarlo più volte</label>
-                                <label><input type="checkbox" name="dati_9" data-category="dati"> Hai buone doti di osservazione e ricordi facilmente ciò che hai osservato</label>
-                                <label><input type="checkbox" name="dati_10" data-category="dati"> Sei costante nel dedicarti agli impegni che ti assumi</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE IDEE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="idee_1" data-category="idee"> Ti piace studiare e non ti spaventa l'idea di studiare ancora per parecchi anni</label>
-                                <label><input type="checkbox" name="idee_2" data-category="idee"> Ti piace leggere</label>
-                                <label><input type="checkbox" name="idee_3" data-category="idee"> Ti piace discutere di problemi sociali o religiosi o politici o scientifici</label>
-                                <label><input type="checkbox" name="idee_4" data-category="idee"> C'è un argomento culturale che ti interessa in modo particolare e che approfondisci in modo autonomo</label>
-                                <label><input type="checkbox" name="idee_5" data-category="idee"> Non ti capita quasi mai di pensare che certe materie che si studiano a scuola non servono a niente</label>
-                                <label><input type="checkbox" name="idee_6" data-category="idee"> Ti piacciono gli esercizi che mettono alla prova la tua logica</label>
-                                <label><input type="checkbox" name="idee_7" data-category="idee"> Hai buona memoria</label>
-                                <label><input type="checkbox" name="idee_8" data-category="idee"> Qualche volta segui alla televisione un programma culturale (un documentario, un dibattito...)</label>
-                                <label><input type="checkbox" name="idee_9" data-category="idee"> Hai il gusto della ricerca; consulti per conto tuo libri e/ o Wikipedia, Google, ChatGPT</label>
-                                <label><input type="checkbox" name="idee_10" data-category="idee"> Per capire idee e concetti astratti non hai sempre bisogno che ti facciano degli esempi concreti</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE COSE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="cose_1" data-category="cose"> Riesci bene nei piccoli lavori manuali</label>
-                                <label><input type="checkbox" name="cose_2" data-category="cose"> Ti piace costruire degli oggetti col legno o con altro materiale</label>
-                                <label><input type="checkbox" name="cose_3" data-category="cose"> Segui con precisione i consigli dell'insegnante di Educazione Tecnica quando ti aiuta a costruire qualcosa</label>
-                                <label><input type="checkbox" name="cose_4" data-category="cose"> Ti piace osservare gli artigiani mentre lavorano</label>
-                                <label><input type="checkbox" name="cose_5" data-category="cose"> Ti piace scoprire come funzionano i meccanismi di certi oggetti</label>
-                                <label><input type="checkbox" name="cose_6" data-category="cose"> Se stai a lungo seduto o fermo diventi nervoso</label>
-                                <label><input type="checkbox" name="cose_7" data-category="cose"> Sei affascinato da ogni tipo di macchina</label>
-                                <label><input type="checkbox" name="cose_8" data-category="cose"> Sai inventare delle soluzioni per certi problemi pratici che si presentano a casa o a scuola</label>
-                                <label><input type="checkbox" name="cose_9" data-category="cose"> Alla televisione segui i programmi che illustrano i progressi tecnologici</label>
-                                <label><input type="checkbox" name="cose_10" data-category="cose"> Ami la natura e ti piacerebbe lavorare con le piante o gli animali</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <h4>RIEPILOGO PUNTEGGI</h4>
-                    <table class="score-summary-table">
-                        <tbody>
-                            <tr><td>LAVORARE CON LA GENTE:</td><td><span id="punteggio-gente">0</span></td><td>LAVORARE CON LE IDEE:</td><td><span id="punteggio-idee">0</span></td></tr>
-                            <tr><td>LAVORARE CON I DATI:</td><td><span id="punteggio-dati">0</span></td><td>LAVORARE CON LE COSE:</td><td><span id="punteggio-cose">0</span></td></tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <p class="instruction-text">Adesso, prova a riflettere, rispondendo a questa domanda:</p>
-                    <div class="form-group"><label for="scheda3_riflessione">Cosa hai capito di te? Quale potrebbe essere la modalità di lavorare migliore per te? (In pratica: come ti piacerebbe lavorare?)</label><textarea id="scheda3_riflessione" name="scheda3_riflessione" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</legend>
-                    <p class="instruction-text">Considerate tutte le “scoperte” che hai fatto con le schede precedenti, quale o quali lavori ti piacerebbe fare da grande?</p>
-                    <div class="form-group"><textarea name="scheda4_lavori_desiderati" rows="4"></textarea></div>
-                    <p class="instruction-text">Come ti immagini mentre svolgi uno di questi lavori? (Dove lavori? Cosa fai durante la giornata? Con chi lavori?)</p>
-                    <div class="form-group"><textarea name="scheda4_immaginario_lavoro" rows="6"></textarea></div>
-                    <p class="instruction-text">Perché pensi che questo lavoro faccia per te? (Non scrivere risposte generiche come “mi piace fare…” o “è bello pensare di lavorare come…”, ma cerca di essere il più preciso possibile! Cosa ti interessa? Corrisponde con le tue qualità, capacità o passioni? Quali aspetti ti attirano? C'è qualcuno o qualcosa che ti ha ispirato?)</p>
-                    <div class="form-group"><textarea name="scheda4_motivazioni" rows="8"></textarea></div>
-                    <p class="instruction-text">Quali desideri, sogni, obiettivi pensi di poter realizzare con questo lavoro? (Scrivi cosa ti piacerebbe ottenere per la tua vita e/o per gli altri)</p>
-                    <div class="form-group"><textarea name="scheda4_desideri_sogni" rows="6"></textarea></div>
-                    <p class="instruction-text">C'è qualcuno che ammiri o che ti ispira per il suo lavoro o il suo modo di vivere?</p>
-                    <div class="form-group"><textarea name="scheda4_ispirazione" rows="4"></textarea></div>
-                    <hr>
-                    <h4 class="centered-subtitle">ADESSO - Come mi preparo al mio futuro?</h4>
-                    <p class="instruction-text">Ora serve un ultimo sforzo per riflettere su come puoi arrivare a svolgere il lavoro che ti piace. Un primo tentativo di riflessione...</p>
-                    <div class="form-group"><label for="scheda4_modo_studiare">Qual è il modo di studiare che funziona meglio per te? Prova a pensare a quando ti senti davvero coinvolto e riesci a capire meglio le cose (senza sforzo e fatica). Quando studi da solo oppure quando ascolti qualcuno che spiega? Quando studi da solo oppure in gruppo? Leggendo sui libri oppure su altri supporti? Studi meglio facendo esercizi o con l’applicazione pratica, magari nei laboratori? etc. etc.)</label><textarea id="scheda4_modo_studiare" name="scheda4_modo_studiare" rows="6"></textarea></div>
-                </fieldset>
-                <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
-            </form>
-            <div id="completion-section" style="display:none;">
-                <h2>Grazie per aver completato il questionario!</h2>
-                <p>Le tue risposte sono state salvate correttamente.</p>
-                <button id="download-pdf-btn">Scarica il Riepilogo in PDF</button>
-            </div>
-        </div>
-        
-        <div id="login-view" class="view" style="display: none;">
-            <form id="login-form" class="auth-form">
-                <h2>Accesso Area Riservata Docente</h2>
-                <div class="form-group"><label for="login-email">Email:</label><input type="email" id="login-email" required></div>
-                <div class="form-group"><label for="login-password">Password:</label><input type="password" id="login-password" required></div>
-                <button type="submit" class="submit-btn">Accedi</button>
-                <p id="login-error" class="error-message" style="display:none;"></p>
-            </form>
-        </div>
-
-        <div id="questionnaire-fase1-anno2" class="view" style="display: none;">
-            <div id="questionnaire-fase1-anno1" class="view" style="display: none;">
-            <p class="questionnaire-subtitle">Classi I delle scuole secondarie di I grado</p>
-            <form id="soi-form">
-                <fieldset>
-                    <legend>Dati dello Studente</legend>
-                    <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="cognome">Cognome:</label><input type="text" id="cognome" name="cognome" required></div>
-                    <div class="form-group"><label for="classe">Classe:</label><input type="text" id="classe" name="classe" required></div>
-                    <div class="form-group"><label for="data">Data:</label><input type="date" id="data" name="data" required></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
-                    <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
-                    <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
-                    <div class="grid-inputs"><input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10."></div>
-                    <hr>
-                    <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
-                    <div class="image-container"><p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale"></div>
-                    <div class="map-section">
-                        <div id="cy"></div>
-                        <div id="map-controls"><h3>Pannello di Controllo</h3><div id="controls-content"></div></div>
-                    </div>
-                    <hr>
-                    <details class="suggestions-container"><summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
-                        <table>
-                            <thead><tr><th>CARATTERISTICHE PERSONALI</th></tr></thead>
-                            <tbody>
-                                <tr><td>Corretto</td><td>Protettivo</td><td>Intelligente</td></tr>
-                                <tr><td>Paziente</td><td>Collaborativo</td><td>Capace di assumere responsabilità</td></tr>
-                                <tr><td>Autoritario</td><td>Estroverso</td><td>Simpatico</td></tr>
-                                <tr><td>Avventuroso</td><td>Fidato</td><td>Sincero</td></tr>
-                                <tr><td>Benevolo</td><td>Fiducioso negli altri</td><td>Socievole</td></tr>
-                                <tr><td>Calcolatore</td><td>Generoso</td><td>Creativo</td></tr>
-                                <tr><td>Calmo</td><td>Adattabile</td><td>Tenace</td></tr>
-                                <tr><td>Solidale</td><td>Intraprendente</td><td>Tollerante</td></tr>
-                                <tr><td>Capace di cambiamento</td><td>Intuitivo</td><td>Umile</td></tr>
-                                <tr><td>Competente</td><td>Portato al risultato</td><td>Sensibile</td></tr>
-                                <tr><td>Comunicativo</td><td>Preciso</td><td>Affidabile</td></tr>
-                                <tr><td>Leale</td><td>Coinvolgente</td><td>Deciso</td></tr>
-                                <tr><td>Costante</td><td>Razionale</td><td>Sicuro di sé</td></tr>
-                            </tbody>
-                        </table>
-                    </details>
-                    <hr>
-                    <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
-                    <div class="form-group"><label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label><textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label><textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 2 – UN PENSIERO SUL LAVORO</legend>
-                    <div class="form-group"><label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label><textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label><textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label><textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label><textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 3 – MODI DI LAVORARE</legend>
-                    <div class="instruction-text">
-                        <p>Esistono quattro principali modi diversi di lavorare; quasi tutte le professioni o i lavori si svolgono lavorando un po' in un modo un po' in un altro: in genere, però, prevalgono le caratteristiche di uno di questi modi.</p>
-                        <p><strong>... con la GENTE:</strong> quando si hanno frequenti o continui rapporti con molte persone (con i clienti, i pazienti, gli allievi...). Star bene con la gente ed avere facilità di rapporti con le persone è una caratteristica indispensabile per tanti professionisti diversi: gli insegnanti, i negozianti, i medici, i parrucchieri...</p>
-                        <p><strong>... con i DATI:</strong> quando si ha a che fare con la registrazione, il calcolo, l'elaborazione di dati statistici, dati anagrafici, dati di mercato, calcoli numerici... Lavorano con i dati soprattutto gli impiegati amministrativi, i ragionieri, i segretari, i ricercatori di mercato, gli economisti...</p>
-                        <p><strong>... con le IDEE:</strong> quando si producono concetti astratti, idee artistiche, scientifiche... o si riflette su di esse. In tutte le professioni si deve in qualche modo lavorare col cervello e quindi con le idee, ma certi lavori richiedono una capacità particolarmente sviluppata di riflettere, ragionare, inventare: è il caso, per esempio degli artisti, degli scienziati, dei filosofi...</p>
-                        <p><strong>... con le COSE:</strong> quando si debbono manipolare dei materiali o degli oggetti per produrre o riparare manufatti (materiali come il legno, il ferro, la stoffa... oggetti come l'automobile, la televisione...). Lavorano soprattutto con le cose gli agricoltori o gli artigiani come i sarti, i fabbri, i ceramisti, gli orafi...</p>
-                        <hr>
-                        <p>Ora, prova a compilare il questionario seguente, indicando quali modalità senti più tue (ti potrebbero piacere di più, pensando a come sei fatto).</p>
-                    </div>
-                    <h4 class="centered-subtitle">QUESTIONARIO DI AUTOVALUTAZIONE</h4>
-                    <p>Segna con una crocetta le affermazioni che descrivono chi sei e i tuoi interessi.</p>
-                    <div class="autovalutazione-container">
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LA GENTE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="gente_1" data-category="gente"> Nelle interrogazioni orali ti esprimi con disinvoltura</label>
-                                <label><input type="checkbox" name="gente_2" data-category="gente"> A scuola, ti piace lavorare in gruppo</label>
-                                <label><input type="checkbox" name="gente_3" data-category="gente"> Non resisti a lungo in un posto in cui non puoi parlare</label>
-                                <label><input type="checkbox" name="gente_4" data-category="gente"> Tutti ti dicono che sei garbato e cordiale</label>
-                                <label><input type="checkbox" name="gente_5" data-category="gente"> Vai d'accordo con tutti, anche con le persone che hai appena conosciuto</label>
-                                <label><input type="checkbox" name="gente_6" data-category="gente"> Ti capita spesso di persuadere gli altri a fare ciò che vuoi tu</label>
-                                <label><input type="checkbox" name="gente_7" data-category="gente"> Ammiri molto le persone che aiutano la gente che ha bisogno</label>
-                                <label><input type="checkbox" name="gente_8" data-category="gente"> Ti capita spesso di aiutare qualche compagno in difficoltà</label>
-                                <label><input type="checkbox" name="gente_9" data-category="gente"> Sei disponibile ad ascoltare le persone che ti parlano dei loro problemi</label>
-                                <label><input type="checkbox" name="gente_10" data-category="gente"> Ti piacerebbe svolgere un servizio volontario per aiutare delle persone in difficoltà</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON I DATI</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="dati_1" data-category="dati"> Ti piace fare i calcoli di matematica</label>
-                                <label><input type="checkbox" name="dati_2" data-category="dati"> Sei capace di seguire con precisione delle istruzioni, anche lunghe e complesse</label>
-                                <label><input type="checkbox" name="dati_3" data-category="dati"> Non sopporti il disordine e la confusione</label>
-                                <label><input type="checkbox" name="dati_4" data-category="dati"> Ti piace organizzare bene le tue attività</label>
-                                <label><input type="checkbox" name="dati_5" data-category="dati"> Ti piace costruire grafici e diagrammi</label>
-                                <label><input type="checkbox" name="dati_6" data-category="dati"> Quando devi ricordare delle informazioni, le organizzi con degli schemi, degli elenchi...</label>
-                                <label><input type="checkbox" name="dati_7" data-category="dati"> A scuola i professori ti affidano volentieri degli incarichi che richiedono attenzione e precisione</label>
-                                <label><input type="checkbox" name="dati_8" data-category="dati"> Per presentare un compito ordinato sei disposto a rifarlo più volte</label>
-                                <label><input type="checkbox" name="dati_9" data-category="dati"> Hai buone doti di osservazione e ricordi facilmente ciò che hai osservato</label>
-                                <label><input type="checkbox" name="dati_10" data-category="dati"> Sei costante nel dedicarti agli impegni che ti assumi</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE IDEE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="idee_1" data-category="idee"> Ti piace studiare e non ti spaventa l'idea di studiare ancora per parecchi anni</label>
-                                <label><input type="checkbox" name="idee_2" data-category="idee"> Ti piace leggere</label>
-                                <label><input type="checkbox" name="idee_3" data-category="idee"> Ti piace discutere di problemi sociali o religiosi o politici o scientifici</label>
-                                <label><input type="checkbox" name="idee_4" data-category="idee"> C'è un argomento culturale che ti interessa in modo particolare e che approfondisci in modo autonomo</label>
-                                <label><input type="checkbox" name="idee_5" data-category="idee"> Non ti capita quasi mai di pensare che certe materie che si studiano a scuola non servono a niente</label>
-                                <label><input type="checkbox" name="idee_6" data-category="idee"> Ti piacciono gli esercizi che mettono alla prova la tua logica</label>
-                                <label><input type="checkbox" name="idee_7" data-category="idee"> Hai buona memoria</label>
-                                <label><input type="checkbox" name="idee_8" data-category="idee"> Qualche volta segui alla televisione un programma culturale (un documentario, un dibattito...)</label>
-                                <label><input type="checkbox" name="idee_9" data-category="idee"> Hai il gusto della ricerca; consulti per conto tuo libri e/ o Wikipedia, Google, ChatGPT</label>
-                                <label><input type="checkbox" name="idee_10" data-category="idee"> Per capire idee e concetti astratti non hai sempre bisogno che ti facciano degli esempi concreti</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE COSE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="cose_1" data-category="cose"> Riesci bene nei piccoli lavori manuali</label>
-                                <label><input type="checkbox" name="cose_2" data-category="cose"> Ti piace costruire degli oggetti col legno o con altro materiale</label>
-                                <label><input type="checkbox" name="cose_3" data-category="cose"> Segui con precisione i consigli dell'insegnante di Educazione Tecnica quando ti aiuta a costruire qualcosa</label>
-                                <label><input type="checkbox" name="cose_4" data-category="cose"> Ti piace osservare gli artigiani mentre lavorano</label>
-                                <label><input type="checkbox" name="cose_5" data-category="cose"> Ti piace scoprire come funzionano i meccanismi di certi oggetti</label>
-                                <label><input type="checkbox" name="cose_6" data-category="cose"> Se stai a lungo seduto o fermo diventi nervoso</label>
-                                <label><input type="checkbox" name="cose_7" data-category="cose"> Sei affascinato da ogni tipo di macchina</label>
-                                <label><input type="checkbox" name="cose_8" data-category="cose"> Sai inventare delle soluzioni per certi problemi pratici che si presentano a casa o a scuola</label>
-                                <label><input type="checkbox" name="cose_9" data-category="cose"> Alla televisione segui i programmi che illustrano i progressi tecnologici</label>
-                                <label><input type="checkbox" name="cose_10" data-category="cose"> Ami la natura e ti piacerebbe lavorare con le piante o gli animali</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <h4>RIEPILOGO PUNTEGGI</h4>
-                    <table class="score-summary-table">
-                        <tbody>
-                            <tr><td>LAVORARE CON LA GENTE:</td><td><span id="punteggio-gente">0</span></td><td>LAVORARE CON LE IDEE:</td><td><span id="punteggio-idee">0</span></td></tr>
-                            <tr><td>LAVORARE CON I DATI:</td><td><span id="punteggio-dati">0</span></td><td>LAVORARE CON LE COSE:</td><td><span id="punteggio-cose">0</span></td></tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <p class="instruction-text">Adesso, prova a riflettere, rispondendo a questa domanda:</p>
-                    <div class="form-group"><label for="scheda3_riflessione">Cosa hai capito di te? Quale potrebbe essere la modalità di lavorare migliore per te? (In pratica: come ti piacerebbe lavorare?)</label><textarea id="scheda3_riflessione" name="scheda3_riflessione" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</legend>
-                    <p class="instruction-text">Considerate tutte le “scoperte” che hai fatto con le schede precedenti, quale o quali lavori ti piacerebbe fare da grande?</p>
-                    <div class="form-group"><textarea name="scheda4_lavori_desiderati" rows="4"></textarea></div>
-                    <p class="instruction-text">Come ti immagini mentre svolgi uno di questi lavori? (Dove lavori? Cosa fai durante la giornata? Con chi lavori?)</p>
-                    <div class="form-group"><textarea name="scheda4_immaginario_lavoro" rows="6"></textarea></div>
-                    <p class="instruction-text">Perché pensi che questo lavoro faccia per te? (Non scrivere risposte generiche come “mi piace fare…” o “è bello pensare di lavorare come…”, ma cerca di essere il più preciso possibile! Cosa ti interessa? Corrisponde con le tue qualità, capacità o passioni? Quali aspetti ti attirano? C'è qualcuno o qualcosa che ti ha ispirato?)</p>
-                    <div class="form-group"><textarea name="scheda4_motivazioni" rows="8"></textarea></div>
-                    <p class="instruction-text">Quali desideri, sogni, obiettivi pensi di poter realizzare con questo lavoro? (Scrivi cosa ti piacerebbe ottenere per la tua vita e/o per gli altri)</p>
-                    <div class="form-group"><textarea name="scheda4_desideri_sogni" rows="6"></textarea></div>
-                    <p class="instruction-text">C'è qualcuno che ammiri o che ti ispira per il suo lavoro o il suo modo di vivere?</p>
-                    <div class="form-group"><textarea name="scheda4_ispirazione" rows="4"></textarea></div>
-                    <hr>
-                    <h4 class="centered-subtitle">ADESSO - Come mi preparo al mio futuro?</h4>
-                    <p class="instruction-text">Ora serve un ultimo sforzo per riflettere su come puoi arrivare a svolgere il lavoro che ti piace. Un primo tentativo di riflessione...</p>
-                    <div class="form-group"><label for="scheda4_modo_studiare">Qual è il modo di studiare che funziona meglio per te? Prova a pensare a quando ti senti davvero coinvolto e riesci a capire meglio le cose (senza sforzo e fatica). Quando studi da solo oppure quando ascolti qualcuno che spiega? Quando studi da solo oppure in gruppo? Leggendo sui libri oppure su altri supporti? Studi meglio facendo esercizi o con l’applicazione pratica, magari nei laboratori? etc. etc.)</label><textarea id="scheda4_modo_studiare" name="scheda4_modo_studiare" rows="6"></textarea></div>
-                <hr>
-<div class="form-group">
-  <label for="scheda4_scuola_adatta">
-    E quale potrebbe essere il tipo di scuola più adatta a te dopo la terza media?
-  </label>
-  <textarea id="scheda4_scuola_adatta" name="scheda4_scuola_adatta" rows="4"></textarea>
-</div>
-
-<p class="instruction-text">
-  Qui di seguito, a tale scopo, ti riportiamo un’immagine per riflettere sui possibili percorsi formativi
-  che potresti considerare più giusti per te, ora che hai più conoscenza delle tue caratteristiche,
-  attitudini, interessi e preferenze nel modo di studiare e di immaginare il tuo lavoro.
-</p>
-
-<div class="image-container" style="text-align: center;">
-  <img src="scheda4.jpeg" alt="Percorsi dopo la terza media" style="max-width: 100%; height: auto;">
-</div>
-		</fieldset>
-<fieldset>
-    <legend>SCHEDA 5 – AUTOVALUTAZIONE FINALE</legend>
-    <p class="instruction-text">Concludiamo con un momento di autovalutazione personale rispetto al percorso appena svolto.</p>
-
-    <div class="form-group">
-        <label for="scheda5_cosa_ho_capito">Cosa hai capito di te stesso/a grazie a questo percorso?</label>
-        <textarea id="scheda5_cosa_ho_capito" name="scheda5_cosa_ho_capito" rows="5"></textarea>
+<main>
+  <!-- HOME-VIEW -->
+  <div id="home-view" class="view">
+    <div class="choice-box">
+      <h2>Seleziona il percorso che vuoi iniziare:</h2>
+      <a href="#/studente/fase1-anno1" class="choice-button">
+        Fase 1 – Rilevazione bisogni di orientamento anno I
+      </a>
+      <a href="#/studente/fase1-anno2" class="choice-button">
+        Fase 1 – Rilevazione bisogni di orientamento anno II
+      </a>
+      <a href="#/studente/fase1-anno3" class="choice-button">
+        Fase 1 – Rilevazione bisogni di orientamento anno III
+      </a>
+      <a href="#/studente/fase3-anno1" class="choice-button">
+        Fase 3 – Sintesi dell’esperienza anno I
+      </a>
+      <a href="#/studente/fase3-anno2" class="choice-button">
+        Fase 3 – Sintesi dell’esperienza anno II
+      </a>
+      <a href="#/studente/fase3-anno3" class="choice-button">
+        Fase 3 – Sintesi dell’esperienza anno III
+      </a>
+      <a href="#/studente/fase4" class="choice-button">
+        Fase 4 – Rielaborazione dell’esperienza
+      </a>
+      <a href="#/docente" class="choice-button">
+        Accesso Docenti
+      </a>
     </div>
+  </div>
 
-    <div class="form-group">
-        <label for="scheda5_cosa_mi_ha_colpito">Qual è la parte del percorso che ti ha colpito di più o che ti è sembrata più utile?</label>
-        <textarea id="scheda5_cosa_mi_ha_colpito" name="scheda5_cosa_mi_ha_colpito" rows="5"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="scheda5_come_continuo">In che modo pensi di continuare a riflettere sul tuo orientamento in futuro?</label>
-        <textarea id="scheda5_come_continuo" name="scheda5_come_continuo" rows="5"></textarea>
-    </div>
-</fieldset>
-
-                <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
-            </form>
-            <div id="completion-section" style="display:none;">
-                <h2>Grazie per aver completato il questionario!</h2>
-                <p>Le tue risposte sono state salvate correttamente.</p>
-                <button id="download-pdf-btn">Scarica il Riepilogo in PDF</button>
-            </div>
-                </div>
-
-        <div id="questionnaire-fase1-anno3" class="view" style="display: none;">
-            <div id="questionnaire-fase1-anno1" class="view" style="display: none;">
-            <p class="questionnaire-subtitle">Classi I delle scuole secondarie di I grado</p>
-            <form id="soi-form">
-                <fieldset>
-                    <legend>Dati dello Studente</legend>
-                    <div class="form-group"><label for="nome">Nome:</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="cognome">Cognome:</label><input type="text" id="cognome" name="cognome" required></div>
-                    <div class="form-group"><label for="classe">Classe:</label><input type="text" id="classe" name="classe" required></div>
-                    <div class="form-group"><label for="data">Data:</label><input type="date" id="data" name="data" required></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 1 – MAPPA DI DESCRIZIONE DI SÉ</legend>
-                    <p class="instruction-text">Le mappe sono rappresentazioni grafiche che ci aiutano a vedere meglio le singole tessere che compongono il puzzle e come si incastrano tra loro. Sono delle strategie che ci permettono di organizzare le cose che conosciamo. Prova a fare una mappa di te stesso (in pratica una bella fotografia di te stesso).</p>
-                    <p class="instruction-text"><strong>Elenca dieci aggettivi che ritieni essere i più adatti per descriverti.</strong></p>
-                    <div class="grid-inputs"><input type="text" name="aggettivo_1" placeholder="1."><input type="text" name="aggettivo_2" placeholder="2."><input type="text" name="aggettivo_3" placeholder="3."><input type="text" name="aggettivo_4" placeholder="4."><input type="text" name="aggettivo_5" placeholder="5."><input type="text" name="aggettivo_6" placeholder="6."><input type="text" name="aggettivo_7" placeholder="7."><input type="text" name="aggettivo_8" placeholder="8."><input type="text" name="aggettivo_9" placeholder="9."><input type="text" name="aggettivo_10" placeholder="10."></div>
-                    <hr>
-                    <p class="instruction-text">Ora usa lo strumento qui sotto per costruire la tua mappa. Inizia aggiungendo gli aggettivi che ritieni più importanti. Poi, clicca su ogni aggettivo per collegarlo a specifiche attività che fai o contesti in cui ti trovi.</p>
-                    <div class="image-container"><p><strong>Esempio di mappa:</strong></p><img src="mappa-esempio.png" alt="Esempio di una mappa concettuale"></div>
-                    <div class="map-section">
-                        <div id="cy"></div>
-                        <div id="map-controls"><h3>Pannello di Controllo</h3><div id="controls-content"></div></div>
-                    </div>
-                    <hr>
-                    <details class="suggestions-container"><summary>Non trovi le parole? Clicca qui per una lista di aggettivi.</summary>
-                        <table>
-                            <thead><tr><th>CARATTERISTICHE PERSONALI</th></tr></thead>
-                            <tbody>
-                                <tr><td>Corretto</td><td>Protettivo</td><td>Intelligente</td></tr>
-                                <tr><td>Paziente</td><td>Collaborativo</td><td>Capace di assumere responsabilità</td></tr>
-                                <tr><td>Autoritario</td><td>Estroverso</td><td>Simpatico</td></tr>
-                                <tr><td>Avventuroso</td><td>Fidato</td><td>Sincero</td></tr>
-                                <tr><td>Benevolo</td><td>Fiducioso negli altri</td><td>Socievole</td></tr>
-                                <tr><td>Calcolatore</td><td>Generoso</td><td>Creativo</td></tr>
-                                <tr><td>Calmo</td><td>Adattabile</td><td>Tenace</td></tr>
-                                <tr><td>Solidale</td><td>Intraprendente</td><td>Tollerante</td></tr>
-                                <tr><td>Capace di cambiamento</td><td>Intuitivo</td><td>Umile</td></tr>
-                                <tr><td>Competente</td><td>Portato al risultato</td><td>Sensibile</td></tr>
-                                <tr><td>Comunicativo</td><td>Preciso</td><td>Affidabile</td></tr>
-                                <tr><td>Leale</td><td>Coinvolgente</td><td>Deciso</td></tr>
-                                <tr><td>Costante</td><td>Razionale</td><td>Sicuro di sé</td></tr>
-                            </tbody>
-                        </table>
-                    </details>
-                    <hr>
-                    <p class="instruction-text">Prova a pensare alle tue caratteristiche personali.</p>
-                    <div class="form-group"><label for="scheda1_attivita_preferite">Tra le attività che hai descritto nella mappa, scegli le due che ti piacciono di più e prova a dire perché.</label><textarea id="scheda1_attivita_preferite" name="scheda1_attivita_preferite" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda1_preferenze_scolastiche">E rispetto alla scuola, cosa ti piace? Ci sono materie o argomenti che ti piacciono e che ti piacerebbe approfondire?</label><textarea id="scheda1_preferenze_scolastiche" name="scheda1_preferenze_scolastiche" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 2 – UN PENSIERO SUL LAVORO</legend>
-                    <div class="form-group"><label for="scheda2_cosa_e_lavoro">Secondo te, cosa è il lavoro?</label><textarea id="scheda2_cosa_e_lavoro" name="scheda2_cosa_e_lavoro" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_perche_si_lavora">Perché le persone lavorano?</label><textarea id="scheda2_perche_si_lavora" name="scheda2_perche_si_lavora" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_se_nessuno_lavorasse">Se nessuno lavorasse, cosa succederebbe?</label><textarea id="scheda2_se_nessuno_lavorasse" name="scheda2_se_nessuno_lavorasse" rows="5"></textarea></div>
-                    <div class="form-group"><label for="scheda2_come_mi_sento">Se penso al lavoro, mi sento...</label><textarea id="scheda2_come_mi_sento" name="scheda2_come_mi_sento" rows="3"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 3 – MODI DI LAVORARE</legend>
-                    <div class="instruction-text">
-                        <p>Esistono quattro principali modi diversi di lavorare; quasi tutte le professioni o i lavori si svolgono lavorando un po' in un modo un po' in un altro: in genere, però, prevalgono le caratteristiche di uno di questi modi.</p>
-                        <p><strong>... con la GENTE:</strong> quando si hanno frequenti o continui rapporti con molte persone (con i clienti, i pazienti, gli allievi...). Star bene con la gente ed avere facilità di rapporti con le persone è una caratteristica indispensabile per tanti professionisti diversi: gli insegnanti, i negozianti, i medici, i parrucchieri...</p>
-                        <p><strong>... con i DATI:</strong> quando si ha a che fare con la registrazione, il calcolo, l'elaborazione di dati statistici, dati anagrafici, dati di mercato, calcoli numerici... Lavorano con i dati soprattutto gli impiegati amministrativi, i ragionieri, i segretari, i ricercatori di mercato, gli economisti...</p>
-                        <p><strong>... con le IDEE:</strong> quando si producono concetti astratti, idee artistiche, scientifiche... o si riflette su di esse. In tutte le professioni si deve in qualche modo lavorare col cervello e quindi con le idee, ma certi lavori richiedono una capacità particolarmente sviluppata di riflettere, ragionare, inventare: è il caso, per esempio degli artisti, degli scienziati, dei filosofi...</p>
-                        <p><strong>... con le COSE:</strong> quando si debbono manipolare dei materiali o degli oggetti per produrre o riparare manufatti (materiali come il legno, il ferro, la stoffa... oggetti come l'automobile, la televisione...). Lavorano soprattutto con le cose gli agricoltori o gli artigiani come i sarti, i fabbri, i ceramisti, gli orafi...</p>
-                        <hr>
-                        <p>Ora, prova a compilare il questionario seguente, indicando quali modalità senti più tue (ti potrebbero piacere di più, pensando a come sei fatto).</p>
-                    </div>
-                    <h4 class="centered-subtitle">QUESTIONARIO DI AUTOVALUTAZIONE</h4>
-                    <p>Segna con una crocetta le affermazioni che descrivono chi sei e i tuoi interessi.</p>
-                    <div class="autovalutazione-container">
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LA GENTE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="gente_1" data-category="gente"> Nelle interrogazioni orali ti esprimi con disinvoltura</label>
-                                <label><input type="checkbox" name="gente_2" data-category="gente"> A scuola, ti piace lavorare in gruppo</label>
-                                <label><input type="checkbox" name="gente_3" data-category="gente"> Non resisti a lungo in un posto in cui non puoi parlare</label>
-                                <label><input type="checkbox" name="gente_4" data-category="gente"> Tutti ti dicono che sei garbato e cordiale</label>
-                                <label><input type="checkbox" name="gente_5" data-category="gente"> Vai d'accordo con tutti, anche con le persone che hai appena conosciuto</label>
-                                <label><input type="checkbox" name="gente_6" data-category="gente"> Ti capita spesso di persuadere gli altri a fare ciò che vuoi tu</label>
-                                <label><input type="checkbox" name="gente_7" data-category="gente"> Ammiri molto le persone che aiutano la gente che ha bisogno</label>
-                                <label><input type="checkbox" name="gente_8" data-category="gente"> Ti capita spesso di aiutare qualche compagno in difficoltà</label>
-                                <label><input type="checkbox" name="gente_9" data-category="gente"> Sei disponibile ad ascoltare le persone che ti parlano dei loro problemi</label>
-                                <label><input type="checkbox" name="gente_10" data-category="gente"> Ti piacerebbe svolgere un servizio volontario per aiutare delle persone in difficoltà</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON I DATI</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="dati_1" data-category="dati"> Ti piace fare i calcoli di matematica</label>
-                                <label><input type="checkbox" name="dati_2" data-category="dati"> Sei capace di seguire con precisione delle istruzioni, anche lunghe e complesse</label>
-                                <label><input type="checkbox" name="dati_3" data-category="dati"> Non sopporti il disordine e la confusione</label>
-                                <label><input type="checkbox" name="dati_4" data-category="dati"> Ti piace organizzare bene le tue attività</label>
-                                <label><input type="checkbox" name="dati_5" data-category="dati"> Ti piace costruire grafici e diagrammi</label>
-                                <label><input type="checkbox" name="dati_6" data-category="dati"> Quando devi ricordare delle informazioni, le organizzi con degli schemi, degli elenchi...</label>
-                                <label><input type="checkbox" name="dati_7" data-category="dati"> A scuola i professori ti affidano volentieri degli incarichi che richiedono attenzione e precisione</label>
-                                <label><input type="checkbox" name="dati_8" data-category="dati"> Per presentare un compito ordinato sei disposto a rifarlo più volte</label>
-                                <label><input type="checkbox" name="dati_9" data-category="dati"> Hai buone doti di osservazione e ricordi facilmente ciò che hai osservato</label>
-                                <label><input type="checkbox" name="dati_10" data-category="dati"> Sei costante nel dedicarti agli impegni che ti assumi</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE IDEE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="idee_1" data-category="idee"> Ti piace studiare e non ti spaventa l'idea di studiare ancora per parecchi anni</label>
-                                <label><input type="checkbox" name="idee_2" data-category="idee"> Ti piace leggere</label>
-                                <label><input type="checkbox" name="idee_3" data-category="idee"> Ti piace discutere di problemi sociali o religiosi o politici o scientifici</label>
-                                <label><input type="checkbox" name="idee_4" data-category="idee"> C'è un argomento culturale che ti interessa in modo particolare e che approfondisci in modo autonomo</label>
-                                <label><input type="checkbox" name="idee_5" data-category="idee"> Non ti capita quasi mai di pensare che certe materie che si studiano a scuola non servono a niente</label>
-                                <label><input type="checkbox" name="idee_6" data-category="idee"> Ti piacciono gli esercizi che mettono alla prova la tua logica</label>
-                                <label><input type="checkbox" name="idee_7" data-category="idee"> Hai buona memoria</label>
-                                <label><input type="checkbox" name="idee_8" data-category="idee"> Qualche volta segui alla televisione un programma culturale (un documentario, un dibattito...)</label>
-                                <label><input type="checkbox" name="idee_9" data-category="idee"> Hai il gusto della ricerca; consulti per conto tuo libri e/ o Wikipedia, Google, ChatGPT</label>
-                                <label><input type="checkbox" name="idee_10" data-category="idee"> Per capire idee e concetti astratti non hai sempre bisogno che ti facciano degli esempi concreti</label>
-                            </div>
-                        </div>
-                        <div class="lavoro-categoria">
-                            <h5>LAVORARE CON LE COSE</h5>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="cose_1" data-category="cose"> Riesci bene nei piccoli lavori manuali</label>
-                                <label><input type="checkbox" name="cose_2" data-category="cose"> Ti piace costruire degli oggetti col legno o con altro materiale</label>
-                                <label><input type="checkbox" name="cose_3" data-category="cose"> Segui con precisione i consigli dell'insegnante di Educazione Tecnica quando ti aiuta a costruire qualcosa</label>
-                                <label><input type="checkbox" name="cose_4" data-category="cose"> Ti piace osservare gli artigiani mentre lavorano</label>
-                                <label><input type="checkbox" name="cose_5" data-category="cose"> Ti piace scoprire come funzionano i meccanismi di certi oggetti</label>
-                                <label><input type="checkbox" name="cose_6" data-category="cose"> Se stai a lungo seduto o fermo diventi nervoso</label>
-                                <label><input type="checkbox" name="cose_7" data-category="cose"> Sei affascinato da ogni tipo di macchina</label>
-                                <label><input type="checkbox" name="cose_8" data-category="cose"> Sai inventare delle soluzioni per certi problemi pratici che si presentano a casa o a scuola</label>
-                                <label><input type="checkbox" name="cose_9" data-category="cose"> Alla televisione segui i programmi che illustrano i progressi tecnologici</label>
-                                <label><input type="checkbox" name="cose_10" data-category="cose"> Ami la natura e ti piacerebbe lavorare con le piante o gli animali</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <h4>RIEPILOGO PUNTEGGI</h4>
-                    <table class="score-summary-table">
-                        <tbody>
-                            <tr><td>LAVORARE CON LA GENTE:</td><td><span id="punteggio-gente">0</span></td><td>LAVORARE CON LE IDEE:</td><td><span id="punteggio-idee">0</span></td></tr>
-                            <tr><td>LAVORARE CON I DATI:</td><td><span id="punteggio-dati">0</span></td><td>LAVORARE CON LE COSE:</td><td><span id="punteggio-cose">0</span></td></tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <p class="instruction-text">Adesso, prova a riflettere, rispondendo a questa domanda:</p>
-                    <div class="form-group"><label for="scheda3_riflessione">Cosa hai capito di te? Quale potrebbe essere la modalità di lavorare migliore per te? (In pratica: come ti piacerebbe lavorare?)</label><textarea id="scheda3_riflessione" name="scheda3_riflessione" rows="5"></textarea></div>
-                </fieldset>
-                <fieldset>
-                    <legend>SCHEDA 4 – TUTTE LE POSSIBILI STRADE</legend>
-                    <p class="instruction-text">Considerate tutte le “scoperte” che hai fatto con le schede precedenti, quale o quali lavori ti piacerebbe fare da grande?</p>
-                    <div class="form-group"><textarea name="scheda4_lavori_desiderati" rows="4"></textarea></div>
-                    <p class="instruction-text">Come ti immagini mentre svolgi uno di questi lavori? (Dove lavori? Cosa fai durante la giornata? Con chi lavori?)</p>
-                    <div class="form-group"><textarea name="scheda4_immaginario_lavoro" rows="6"></textarea></div>
-                    <p class="instruction-text">Perché pensi che questo lavoro faccia per te? (Non scrivere risposte generiche come “mi piace fare…” o “è bello pensare di lavorare come…”, ma cerca di essere il più preciso possibile! Cosa ti interessa? Corrisponde con le tue qualità, capacità o passioni? Quali aspetti ti attirano? C'è qualcuno o qualcosa che ti ha ispirato?)</p>
-                    <div class="form-group"><textarea name="scheda4_motivazioni" rows="8"></textarea></div>
-                    <p class="instruction-text">Quali desideri, sogni, obiettivi pensi di poter realizzare con questo lavoro? (Scrivi cosa ti piacerebbe ottenere per la tua vita e/o per gli altri)</p>
-                    <div class="form-group"><textarea name="scheda4_desideri_sogni" rows="6"></textarea></div>
-                    <p class="instruction-text">C'è qualcuno che ammiri o che ti ispira per il suo lavoro o il suo modo di vivere?</p>
-                    <div class="form-group"><textarea name="scheda4_ispirazione" rows="4"></textarea></div>
-                    <hr>
-                    <h4 class="centered-subtitle">ADESSO - Come mi preparo al mio futuro?</h4>
-                    <p class="instruction-text">Ora serve un ultimo sforzo per riflettere su come puoi arrivare a svolgere il lavoro che ti piace. Un primo tentativo di riflessione...</p>
-                    <div class="form-group"><label for="scheda4_modo_studiare">Qual è il modo di studiare che funziona meglio per te? Prova a pensare a quando ti senti davvero coinvolto e riesci a capire meglio le cose (senza sforzo e fatica). Quando studi da solo oppure quando ascolti qualcuno che spiega? Quando studi da solo oppure in gruppo? Leggendo sui libri oppure su altri supporti? Studi meglio facendo esercizi o con l’applicazione pratica, magari nei laboratori? etc. etc.)</label><textarea id="scheda4_modo_studiare" name="scheda4_modo_studiare" rows="6"></textarea></div>
-                <hr>
-<div class="form-group">
-  <label for="scheda4_scuola_adatta">
-    E quale potrebbe essere il tipo di scuola più adatta a te dopo la terza media?
-  </label>
-  <textarea id="scheda4_scuola_adatta" name="scheda4_scuola_adatta" rows="4"></textarea>
-</div>
-
-<p class="instruction-text">
-  Qui di seguito, a tale scopo, ti riportiamo un’immagine per riflettere sui possibili percorsi formativi
-  che potresti considerare più giusti per te, ora che hai più conoscenza delle tue caratteristiche,
-  attitudini, interessi e preferenze nel modo di studiare e di immaginare il tuo lavoro.
-</p>
-
-<div class="image-container" style="text-align: center;">
-  <img src="scheda4.jpeg" alt="Percorsi dopo la terza media" style="max-width: 100%; height: auto;">
-</div>
-
-		</fieldset>
-<fieldset>
-    <legend>SCHEDA 5 – AUTOVALUTAZIONE FINALE</legend>
-    <p class="instruction-text">Concludiamo con un momento di autovalutazione personale rispetto al percorso appena svolto.</p>
-
-    <div class="form-group">
-        <label for="scheda5_cosa_ho_capito">Cosa hai capito di te stesso/a grazie a questo percorso?</label>
-        <textarea id="scheda5_cosa_ho_capito" name="scheda5_cosa_ho_capito" rows="5"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="scheda5_cosa_mi_ha_colpito">Qual è la parte del percorso che ti ha colpito di più o che ti è sembrata più utile?</label>
-        <textarea id="scheda5_cosa_mi_ha_colpito" name="scheda5_cosa_mi_ha_colpito" rows="5"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="scheda5_come_continuo">In che modo pensi di continuare a riflettere sul tuo orientamento in futuro?</label>
-        <textarea id="scheda5_come_continuo" name="scheda5_come_continuo" rows="5"></textarea>
-    </div>
-</fieldset>
-
-                <button type="submit" class="submit-btn">Invia e Salva i Dati</button>
-            </form>
-            <div id="completion-section" style="display:none;">
-                <h2>Grazie per aver completato il questionario!</h2>
-                <p>Le tue risposte sono state salvate correttamente.</p>
-                <button id="download-pdf-btn">Scarica il Riepilogo in PDF</button>
-            </div>
-        </div>
-    
-                  
+  <!-- FORM CONTAINER (generato da JS) -->
+  <div id="form-container"></div>
+</main>
 
         <div id="dashboard-view" class="view" style="display: none;">
             <div class="dashboard-header">
@@ -670,6 +96,56 @@
       // Inizializza Firebase
       firebase.initializeApp(firebaseConfig);
     </script>
-    <script src="script.js"></script>
+<!-- 1) la configurazione dei form -->
+<script src="forms-config.js"></script>
+<!-- 2) il renderer che crea il markup -->
+<script src="form-renderer.js"></script>
+<script>
+  function hideAllViews() {
+    // nasconde tutte le .view e il form-container
+    document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+    document.getElementById('form-container').style.display = 'none';
+  }
+
+  function onHashChange() {
+    hideAllViews();
+
+    const h = location.hash;
+    if (!h || h === '#') {
+      // nessun hash → mostro la home-view
+      document.getElementById('home-view').style.display = 'block';
+    }
+    else if (h.includes('fase1-anno1')) {
+      // Fase 1 anno 1
+      document.getElementById('form-container').style.display = 'block';
+      renderForm('#form-container', formsConfig.fase1.anno1.schede);
+    }
+    else if (h.includes('fase1-anno2')) {
+      // Fase 1 anno 2
+      document.getElementById('form-container').style.display = 'block';
+      renderForm('#form-container', formsConfig.fase1.anno2.schede);
+    }
+    // … aggiungi qui fase3, fase4, docente, ecc. …
+  }
+
+  window.addEventListener('hashchange', onHashChange);
+  onHashChange(); // al caricamento della pagina
+</script>
+<!-- 3) il piccolo router hash-based -->
+<script>
+  function onHashChange() {
+    const hash = location.hash;
+    if (hash.includes('fase1-anno1')) {
+      renderForm('#form-container', formsConfig.fase1.anno1.schede);
+    } else if (hash.includes('fase1-anno2')) {
+      renderForm('#form-container', formsConfig.fase1.anno2.schede);
+    }
+    // … poi fase3, fase4 …
+  }
+  window.addEventListener('hashchange', onHashChange);
+  onHashChange(); // al caricamento
+</script>
+<!-- 4) il tuo script principale (Firebase, salvataggi, ecc.) -->
+<script src="script.js"></script>
 </body>
 </html>
