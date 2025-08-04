@@ -507,7 +507,9 @@ const payload = {
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
             
             const data = await response.json();
-            console.log("Dati ricevuti per lo studente:", data.fase2);
+	    const savedPhase2 = data.fase2 || data.data?.fase2 || {};
+	    console.log("📌 Dati per la fase2:", savedPhase2);
+            
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
             let html = `
@@ -552,7 +554,7 @@ console.log("📌 Dati per la fase2:", data.fase2);
     </div>
     <div class="split-modal-right">
 console.log("Dati ricevuti per la Fase 2:", data.fase2);
-      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), data.fase2 || {})}
+      ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), savedPhase2)}
     </div>
   </div>
 `, () => {
