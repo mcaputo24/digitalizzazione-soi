@@ -8,6 +8,7 @@
    * @param {Array} schedeConfig — array di schede (fieldset) da formsConfig
    */
   function renderForm(containerSelector, schedeConfig) {
+    console.log('🖌️ renderForm chiamato:', containerSelector, schedeConfig);
     const container = document.querySelector(containerSelector);
     if (!container) {
       console.error('Container non trovato:', containerSelector);
@@ -24,7 +25,7 @@
       legend.textContent = scheda.title;
       fieldset.appendChild(legend);
 
-      // ── Istruzioni testuali (p class="instruction-text")
+      // ── Istruzioni testuali
       if (scheda.instructions) {
         scheda.instructions.forEach(txt => {
           const p = document.createElement('p');
@@ -34,7 +35,7 @@
         });
       }
 
-      // ── Sottotitolo (h4.centered-subtitle)
+      // ── Sottotitolo
       if (scheda.subTitle) {
         const h4 = document.createElement('h4');
         h4.className = 'centered-subtitle';
@@ -49,14 +50,14 @@
         fieldset.appendChild(p);
       }
 
-      // Contenitore temporaneo per i gruppi di checkbox (scheda3)
+      // Contenitore temporaneo per i checkbox-group
       let cbContainer = null;
 
       // ── Campi ─────────────────────────────────
       scheda.fields.forEach(field => {
         switch (field.type) {
 
-          // ── Input testo / data
+          // Testo / Data
           case 'text':
           case 'date': {
             const wrap = document.createElement('div');
@@ -73,7 +74,7 @@
             fieldset.appendChild(wrap);
           } break;
 
-          // ── Textarea
+          // Textarea
           case 'textarea': {
             const wrap = document.createElement('div');
             wrap.className = 'form-group';
@@ -88,7 +89,7 @@
             fieldset.appendChild(wrap);
           } break;
 
-          // ── Array di input testo (es. 10 aggettivi)
+          // Array di input testo
           case 'text-array': {
             const wrap = document.createElement('div');
             wrap.className = 'form-group';
@@ -108,7 +109,7 @@
             fieldset.appendChild(wrap);
           } break;
 
-          // ── Immagine
+          // Immagine
           case 'image': {
             const wrap = document.createElement('div');
             wrap.className = 'image-container';
@@ -119,7 +120,7 @@
             fieldset.appendChild(wrap);
           } break;
 
-          // ── Sezione Mappa (Cytoscape + controlli)
+          // Mappa Cytoscape
           case 'map': {
             const wrap = document.createElement('div');
             wrap.className = 'map-section';
@@ -130,28 +131,26 @@
             ctrl.id = field.controlsId;
             const h3 = document.createElement('h3');
             h3.textContent = 'Pannello di Controllo';
-            ctrl.appendChild(h3);
             const inner = document.createElement('div');
             inner.id = 'controls-content';
-            ctrl.appendChild(inner);
+            ctrl.append(h3, inner);
             wrap.appendChild(ctrl);
             fieldset.appendChild(wrap);
           } break;
 
-          // ── Dettagli espandibili (<details>)
+          // Details
           case 'details': {
             const details = document.createElement('details');
             details.className = 'suggestions-container';
             const sum = document.createElement('summary');
             sum.textContent = field.summary;
-            details.appendChild(sum);
             const div = document.createElement('div');
             div.innerHTML = field.html;
-            details.appendChild(div);
+            details.append(sum, div);
             fieldset.appendChild(details);
           } break;
 
-          // ── Testo istruzione intermedia
+          // Text instruction
           case 'instruction': {
             const p = document.createElement('p');
             p.className = 'instruction-text';
@@ -159,9 +158,8 @@
             fieldset.appendChild(p);
           } break;
 
-          // ── Gruppo di checkbox (autovalutazione)
+          // Checkbox group
           case 'checkbox-group': {
-            // Inizializza wrapper solo la prima volta
             if (!cbContainer) {
               cbContainer = document.createElement('div');
               cbContainer.className = 'autovalutazione-container';
@@ -170,27 +168,24 @@
             cat.className = 'lavoro-categoria';
             const h5 = document.createElement('h5');
             h5.textContent = field.label;
-            cat.appendChild(h5);
             const cbg = document.createElement('div');
             cbg.className = 'checkbox-group';
             field.options.forEach(opt => {
               const lbl = document.createElement('label');
               const inp = document.createElement('input');
-              inp.type           = 'checkbox';
-              inp.name           = opt.value;
-              inp.value          = opt.value;
+              inp.type = 'checkbox';
+              inp.name = opt.value;
+              inp.value = opt.value;
               inp.dataset.category = field.name;
-              lbl.appendChild(inp);
-              lbl.append(` ${opt.label}`);
+              lbl.append(inp, ` ${opt.label}`);
               cbg.appendChild(lbl);
             });
-            cat.appendChild(cbg);
+            cat.append(h5, cbg);
             cbContainer.appendChild(cat);
           } break;
 
-          // ── Riepilogo punteggi
+          // Score summary
           case 'score-summary': {
-            // Chiudi eventualmente il container checkbox
             if (cbContainer) {
               fieldset.appendChild(cbContainer);
               cbContainer = null;
@@ -205,11 +200,59 @@
               idee:  'LAVORARE CON LE IDEE',
               cose:  'LAVORARE CON LE COSE'
             };
-            // prima riga
+            // riga 1 (0 e 2)
             const r1 = document.createElement('tr');
-            [0,2].forEach(idx => {
+            [0, 2].forEach(idx => {
               const tdL = document.createElement('td');
               tdL.textContent = labels[cats[idx]] + ':';
               const tdS = document.createElement('td');
               const sp  = document.createElement('span');
-              sp.id          = fiel
+              sp.id = field.scoreIds[cats[idx]];
+              sp.textContent = '0';
+              tdS.appendChild(sp);
+              r1.append(tdL, tdS);
+            });
+            // riga 2 (1 e 3)
+            const r2 = document.createElement('tr');
+            [1, 3].forEach(idx => {
+              const tdL = document.createElement('td');
+              tdL.textContent = labels[cats[idx]] + ':';
+              const tdS = document.createElement('td');
+              const sp  = document.createElement('span');
+              sp.id = field.scoreIds[cats[idx]];
+              sp.textContent = '0';
+              tdS.appendChild(sp);
+              r2.append(tdL, tdS);
+            });
+            tb.append(r1, r2);
+            tbl.appendChild(tb);
+            fieldset.appendChild(tbl);
+          } break;
+
+          default:
+            console.warn('Tipo non gestito da renderer:', field.type);
+        }
+      });
+
+      // Se rimane un checkbox-container aperto
+      if (cbContainer) {
+        fieldset.appendChild(cbContainer);
+        cbContainer = null;
+      }
+
+      // Aggiungo il fieldset al container
+      container.appendChild(fieldset);
+    });
+
+    // Pulsante Submit
+    const btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.className = 'submit-btn';
+    btn.textContent = 'Invia e Salva i Dati';
+    container.appendChild(btn);
+  } // ← chiude function renderForm
+
+  // espongo globalmente
+  window.renderForm = renderForm;
+
+})(); // ← chiude l’IIFE
