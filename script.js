@@ -259,10 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
 const studentId = form.dataset.studentid || 'default';
 
 const payload = {
-    studentId: studentId,
-    data: {
-        [formType]: data  // => { fase2: { ... } }
-    }
+  formType: formType,
+  studentId: studentId,
+  data: {
+    [formType]: data  // => { fase2: { ... } }
+  }
 };
 
             const response = await fetch('/.netlify/functions/save-teacher-data', {
