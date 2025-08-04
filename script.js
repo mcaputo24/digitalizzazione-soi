@@ -508,8 +508,7 @@ const payload = {
             
             const data = await response.json();
 	    const savedPhase2 = data.fase2 || {};
-	    console.log("🔥 Dati completi ricevuti da Firebase:", JSON.stringify(data, null, 2));
-            
+          
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
             let html = `
@@ -544,16 +543,13 @@ const payload = {
             contentDiv.innerHTML = html;
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-                console.log("🔥 Dati ricevuti da Firebase:", data);
-console.log("📌 Dati per la fase2:", data.fase2);
-
+console.log("📤 savedPhase2 passato a getPhase2FormHTML:", JSON.stringify(savedPhase2, null, 2));
 		    openModal(`
   <div class="split-modal-container">
     <div class="split-modal-left">
       ${html}
     </div>
     <div class="split-modal-right">
-console.log("Dati ricevuti per la Fase 2:", data.fase2);
       ${getPhase2FormHTML(studentId, decodeURIComponent(studentName), savedPhase2)}
     </div>
   </div>
