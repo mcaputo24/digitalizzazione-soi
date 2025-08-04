@@ -1,256 +1,3 @@
-// script.js
-
-let cy = null;          // manteniamo un’istanza unica
-let selectedNode = null;
-let controlsContent = null;
-
-function initMap() {
-console.log('▶️ initMap chiamata', document.getElementById('cy'), document.getElementById('map-controls'));
-  const cyContainer       = document.getElementById('cy');
-  const controlsContainer = document.getElementById('map-controls');
-  if (!cyContainer || !controlsContainer) return;
-
-  // Se esiste una mappa precedente, distruggila
-  if (cy) {
-    cy.destroy();
-    cyContainer.innerHTML = '';
-    controlsContainer.innerHTML = '';
-  }
-
-  // Inizializza Cytoscape con il tuo snippet "vecchio"
-  cy = cytoscape({
-    container: cyContainer,
-    elements: [
-      { data: { id: 'io_sono', label: 'IO SONO' },
-        position: { x: 300, y: 200 },
-        locked: true,
-        classes: 'io-sono'
-      }
-    ],
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'label': 'data(label)',
-          'text-valign': 'center',
-          'color': '#fff',
-          'text-outline-width': 2,
-          'background-color': '#888',
-          'padding': '10px',
-          'shape': 'round-rectangle',
-          'text-wrap': 'wrap',
-          'text-max-width': '140px'
-        }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'width': 3,
-          'line-color': '#ccc',
-          'target-arrow-color': '#ccc',
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier'
-        }
-      },
-      {
-        selector: '.io-sono',
-        style: {
-          'background-color': '#005a87',
-          'text-outline-color': '#005a87'
-        }
-      },
-      {
-        selector: '.aggettivo',
-        style: {
-          'background-color': '#c15c2d',
-          'text-outline-color': '#c15c2d'
-        }
-      },
-      {
-        selector: '.attivita',
-        style: {
-          'background-color': '#3a7d44',
-          'text-outline-color': '#3a7d44'
-        }
-      },
-      {
-        selector: '.contesto',
-        style: {
-          'background-color': '#5bc0de',
-          'text-outline-color': '#5bc0de',
-          'color': '#000'
-        }
-      },
-      {
-        selector: ':selected',
-        style: {
-          'border-width': 3,
-          'border-color': '#DAA520'
-        }
-      }
-    ],
-    layout: { name: 'preset' }
-  });
-console.log('▶️ cy instance:', cy);
-console.log('▶️ numero di nodi iniziali:', cy.nodes().length);
-
-  // forzo il resize in caso il container fosse stato nascosto
-  cy.resize();
-  cy.fit();   // centra la vista
-
-  // memorizzo controlsContent in variabile esterna
-  controlsContent = controlsContainer;
-
-  // setup interazioni
-  cy.on('tap', 'node', evt => {
-    const node = evt.target;
-    if (node.id() !== 'io_sono') {
-      renderDetailControls(node);
-    }
-  });
-
-  // Rende i controlli iniziali
-  renderBaseControls();
-}
-
-
-/** 
- * Mostra i controlli di default (aggiungi aggettivo)
- */
-function renderBaseControls() {
-  selectedNode = null;
-  cy.elements().unselect();
-
-  controlsContent.innerHTML = `
-    <div class="form-group">
-      <label for="new-aggettivo">Aggiungi un aggettivo:</label>
-      <input type="text" id="new-aggettivo" placeholder="Es. Creativo">
-    </div>
-    <button type="button" id="add-aggettivo-btn">+ Aggiungi Aggettivo</button>
-  `;
-
-  document
-    .getElementById('add-aggettivo-btn')
-    .addEventListener('click', addAggettivoNode);
-}
-
-/** 
- * Mostra i controlli di dettaglio per un nodo selezionato 
- */
-function renderDetailControls(node) {
-  selectedNode = node;
-  controlsContent.innerHTML = `
-    <h4>Dettagli per: "${ node.data('label') }"</h4>
-    <div id="detail-actions">
-      <p>Cosa vuoi collegare a questo aggettivo?</p>
-      <button type="button" id="show-attivita-input">+ Aggiungi Attività</button>
-      <button type="button" id="show-contesto-input">+ Aggiungi Contesto</button>
-    </div>
-    <hr>
-    <button type="button" id="delete-node-btn" class="delete-btn">
-      ❌ Elimina nodo
-    </button>
-    <button type="button" id="back-to-base-btn">Annulla</button>
-  `;
-
-  document
-    .getElementById('show-attivita-input')
-    .addEventListener('click', () => showDetailInput('attivita'));
-
-  document
-    .getElementById('show-contesto-input')
-    .addEventListener('click', () => showDetailInput('contesto'));
-
-  document
-    .getElementById('delete-node-btn')
-    .addEventListener('click', () => {
-      cy.remove(selectedNode);
-      renderBaseControls();
-    });
-
-  document
-    .getElementById('back-to-base-btn')
-    .addEventListener('click', renderBaseControls);
-}
-
-/** Aggiunge un nodo “aggettivo” collegato a IO SONO */
-function addAggettivoNode() {
-  const inp   = document.getElementById('new-aggettivo');
-  const label = inp.value.trim();
-  if (!label) return;
-
-  const id = `aggettivo_${Date.now()}`;
-  cy.add([
-    { group: 'nodes', data: { id, label }, classes: 'aggettivo' },
-    { group: 'edges', data: { source: 'io_sono', target: id } }
-  ]);
-
-  // ricalcolo la vista
-  cy.layout({ name: 'preset' }).run();
-  inp.value = '';
-}
-
-/** Mostra l’input per attività/contesto */
-function showDetailInput(type) {
-  const text = type === 'attivita' ? "un'attività" : 'un contesto';
-  controlsContent.innerHTML = `
-    <h4>Aggiungi ${ text }</h4>
-    <div class="form-group">
-      <label for="new-detail-text">Testo:</label>
-      <input type="text" id="new-detail-text" placeholder="Es. Suono la chitarra">
-    </div>
-    <button type="button" id="confirm-detail-btn">Conferma</button>
-    <button type="button" id="cancel-detail-btn">Annulla</button>
-  `;
-
-  document
-    .getElementById('confirm-detail-btn')
-    .addEventListener('click', () => {
-      const val = document.getElementById('new-detail-text').value.trim();
-      if (val && selectedNode) {
-        const nid = `${type}_${Date.now()}`;
-        cy.add([
-          { group: 'nodes', data: { id: nid, label: val }, classes: type },
-          { group: 'edges', data: { source: selectedNode.id(), target: nid } }
-        ]);
-        cy.layout({ name: 'preset' }).run();
-        renderDetailControls(selectedNode);
-      }
-    });
-
-  document
-    .getElementById('cancel-detail-btn')
-    .addEventListener('click', () => renderDetailControls(selectedNode));
-}
-
-
-/**
- * Calcola e aggiorna i punteggi di Scheda 3.
- */
-function updateScores() {
-  ['gente', 'dati', 'idee', 'cose'].forEach(cat => {
-    const count = document.querySelectorAll(
-      `input[type=checkbox][data-category="${cat}"]:checked`
-    ).length;
-    const span = document.getElementById(`punteggio-${cat}`);
-    if (span) span.textContent = count;
-  });
-}
-
-/**
- * Collega gli event listener sui checkbox di Scheda 3.
- */
-function bindScoreCalculation() {
-  document.querySelectorAll(
-    'input[type=checkbox][data-category]'
-  ).forEach(cb => {
-    cb.removeEventListener('change', updateScores);
-    cb.addEventListener('change', updateScores);
-  });
-  // Inizializza subito i valori
-  updateScores();
-}
-
 // Variabile condivisa per le classi disponibili
 let availableClasses = [];
 
@@ -546,7 +293,77 @@ const payload = {
         if (isQuestionnaireInitialized) return;
         const controlsContent = document.getElementById('controls-content');
         let selectedNode = null;
-        
+        const cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [ { data: { id: 'io_sono', label: 'IO SONO' }, position: { x: 300, y: 200 }, locked: true, classes: 'io-sono' } ],
+            style: [
+                { selector: 'node', style: { 'label': 'data(label)','text-valign': 'center','color': '#fff','text-outline-width': 2,'background-color': '#888','width': 'label','height': 'label','padding': '10px','shape': 'round-rectangle','text-wrap': 'wrap','text-max-width': '140px' } },
+                { selector: 'edge', style: { 'width': 3,'line-color': '#ccc','target-arrow-color': '#ccc','target-arrow-shape': 'triangle','curve-style': 'bezier' } },
+                { selector: '.io-sono', style: { 'background-color': '#005a87','text-outline-color': '#005a87' } },
+                { selector: '.aggettivo', style: { 'background-color': '#c15c2d','text-outline-color': '#c15c2d' } },
+                { selector: '.attivita', style: { 'background-color': '#3a7d44','text-outline-color': '#3a7d44' } },
+                { selector: '.contesto', style: { 'background-color': '#5bc0de','text-outline-color': '#5bc0de','color': '#000' } },
+                { selector: ':selected', style: { 'border-width': 3,'border-color': '#DAA520' } }
+            ],
+            layout: { name: 'preset' }
+        });
+
+        function renderBaseControls() {
+            selectedNode = null;
+            cy.elements().unselect();
+            controlsContent.innerHTML = `<div class="form-group"><label for="new-aggettivo">Aggiungi un aggettivo:</label><input type="text" id="new-aggettivo" placeholder="Es. Creativo"></div><button type="button" id="add-aggettivo-btn">+ Aggiungi Aggettivo</button>`;
+            document.getElementById('add-aggettivo-btn').addEventListener('click', addAggettivoNode);
+        }
+
+        function renderDetailControls(node) {
+            selectedNode = node;
+            let deleteButtonText = '❌ Elimina questa voce';
+            if (node.hasClass('aggettivo')) { deleteButtonText = '❌ Elimina aggettivo e collegamenti'; }
+            controlsContent.innerHTML = `<h4>Dettagli per: "${node.data('label')}"</h4><div id="detail-actions"><p>Cosa vuoi collegare a questo aggettivo?</p><button type="button" id="show-attivita-input">+ Aggiungi Attività</button><button type="button" id="show-contesto-input">+ Aggiungi Contesto</button></div><hr><button type="button" id="delete-node-btn" class="delete-btn">${deleteButtonText}</button><button type="button" id="back-to-base-btn">Annulla</button>`;
+            const detailActions = document.getElementById('detail-actions');
+            if (!node.hasClass('aggettivo')) { detailActions.style.display = 'none'; }
+            document.getElementById('show-attivita-input')?.addEventListener('click', () => showDetailInput('attivita'));
+            document.getElementById('show-contesto-input')?.addEventListener('click', () => showDetailInput('contesto'));
+            document.getElementById('delete-node-btn').addEventListener('click', deleteSelectedNode);
+            document.getElementById('back-to-base-btn').addEventListener('click', renderBaseControls);
+        }
+
+        function showDetailInput(type) {
+            const typeText = type === 'attivita' ? "un'attività" : 'un contesto';
+            controlsContent.innerHTML = `<h4>Aggiungi ${typeText}</h4><div class="form-group"><label for="new-detail-text">Testo:</label><input type="text" id="new-detail-text" placeholder="Es. Suono la chitarra"></div><button type="button" id="confirm-detail-btn">Conferma</button><button type="button" id="cancel-detail-btn">Annulla</button>`;
+            document.getElementById('confirm-detail-btn').addEventListener('click', () => addDetailNode(type));
+            document.getElementById('cancel-detail-btn').addEventListener('click', () => renderDetailControls(selectedNode));
+        }
+
+        function deleteSelectedNode() {
+            if (selectedNode) { const children = selectedNode.outgoers('node'); selectedNode.union(children).remove(); renderBaseControls(); }
+        }
+
+        function addAggettivoNode() {
+            const input = document.getElementById('new-aggettivo');
+            const label = input.value.trim();
+            if (label) {
+                const newNodeId = `aggettivo_${Date.now()}`;
+                cy.add([{ group: 'nodes', data: { id: newNodeId, label: label }, classes: 'aggettivo' }, { group: 'edges', data: { source: 'io_sono', target: newNodeId } }]);
+                cy.layout({ name: 'cose', animate: true, padding: 30 }).run();
+                input.value = '';
+            }
+        }
+
+        function addDetailNode(type) {
+            const input = document.getElementById('new-detail-text');
+            const label = input.value.trim();
+            if (label && selectedNode) {
+                const newNodeId = `${type}_${Date.now()}`;
+                cy.add([{ group: 'nodes', data: { id: newNodeId, label: label }, classes: type }, { group: 'edges', data: { source: selectedNode.id(), target: newNodeId } }]);
+                cy.layout({ name: 'cose', animate: true, padding: 30 }).run();
+                renderDetailControls(selectedNode);
+            }
+        }
+
+        cy.on('tap', 'node', function(evt){ const node = evt.target; if (node.id() !== 'io_sono') { renderDetailControls(node); } });
+        renderBaseControls();
+
         const scores = { gente: 0, dati: 0, idee: 0, cose: 0 };
         const scoreSpans = {
             gente: document.getElementById('punteggio-gente'),
