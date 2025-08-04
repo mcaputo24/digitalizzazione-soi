@@ -255,11 +255,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
-            const payload = {
-                formType: form.id.replace('-form', ''), // es. 'fase1'
-                studentId: form.dataset.studentid || 'default',
-                data: data
-            };
+            const formType = form.id.replace('-form', ''); // es. 'fase2'
+const studentId = form.dataset.studentid || 'default';
+
+const payload = {
+    studentId: studentId,
+    data: {
+        [formType]: data  // => { fase2: { ... } }
+    }
+};
 
             const response = await fetch('/.netlify/functions/save-teacher-data', {
                 method: 'POST',
