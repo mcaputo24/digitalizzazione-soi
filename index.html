@@ -119,13 +119,21 @@
       // Fase 1 anno 1
       document.getElementById('form-container').style.display = 'block';
       renderForm('#form-container', formsConfig.fase1.anno1.schede);
+      initMap();               // ← mappa
+      bindScoreCalculation();  // ← punteggi
     }
     else if (h.includes('fase1-anno2')) {
       // Fase 1 anno 2
       document.getElementById('form-container').style.display = 'block';
       renderForm('#form-container', formsConfig.fase1.anno2.schede);
+      initMap();               // ← mappa
+      bindScoreCalculation();  // ← punteggi
     }
-    // … aggiungi qui fase3, fase4, docente, ecc. …
+    else if (h.includes('fase1-anno3')) {
+      document.getElementById('form-container').style.display = 'block';
+      renderForm('#form-container', formsConfig.fase1.anno3.schede);
+      initMap();
+      bindScoreCalculation();
   }
 
   window.addEventListener('hashchange', onHashChange);

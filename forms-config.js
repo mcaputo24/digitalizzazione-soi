@@ -312,6 +312,25 @@ const anno2Schede = [
   }
 ];
 
+// ════════════════════════════════════════════════
+// Schede Fase1 – Anno 3 (stesso contenuto di Anno 2)
+// ════════════════════════════════════════════════
+const anno3Schede = anno2Schede.map(s => {
+  // se vuoi mantenere lo stesso id/title, basta restituire s
+  return { ...s };
+});
+
+// Poi estendi formsConfig
+const formsConfig = {
+  fase1: {
+    anno1: { schede: anno1Schede },
+    anno2: { schede: anno2Schede },
+    anno3: { schede: anno3Schede }
+  }
+};
+
+// global
+window.formsConfig = formsConfig;
 
 // ───────────────────────────────────────────────────────────
 // Export globale della configurazione

@@ -1,3 +1,67 @@
+// script.js
+
+/**
+ * Inizializza Cytoscape sulla mappa, se presente.
+ */
+function initMap() {
+  const cyContainer = document.getElementById('cy');
+  if (!cyContainer) return;
+
+  // Svuota eventuali istanze precedenti
+  cyContainer.innerHTML = '';
+
+  window.cy = cytoscape({
+    container: cyContainer,
+    elements: [], // parti vuoto, studente aggiunge nodi con i controlli
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#0074D9',
+          'label': 'data(label)'
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'line-color': '#aaa',
+          'target-arrow-shape': 'triangle'
+        }
+      }
+    ],
+    layout: { name: 'grid', rows: 1 }
+  });
+
+  // TODO: aggiungi qui i controlli per inserire i nodi/aggettivi
+}
+
+/**
+ * Calcola e aggiorna i punteggi di Scheda 3.
+ */
+function updateScores() {
+  ['gente', 'dati', 'idee', 'cose'].forEach(cat => {
+    const count = document.querySelectorAll(
+      `input[type=checkbox][data-category="${cat}"]:checked`
+    ).length;
+    const span = document.getElementById(`punteggio-${cat}`);
+    if (span) span.textContent = count;
+  });
+}
+
+/**
+ * Collega gli event listener sui checkbox di Scheda 3.
+ */
+function bindScoreCalculation() {
+  document.querySelectorAll(
+    'input[type=checkbox][data-category]'
+  ).forEach(cb => {
+    cb.removeEventListener('change', updateScores);
+    cb.addEventListener('change', updateScores);
+  });
+  // Inizializza subito i valori
+  updateScores();
+}
+
 // Variabile condivisa per le classi disponibili
 let availableClasses = [];
 
