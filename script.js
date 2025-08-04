@@ -507,7 +507,7 @@ const payload = {
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
             
             const data = await response.json();
-	    const savedPhase2 = data.fase2 || data.data?.fase2 || {};
+	    const savedPhase2 = data?.data?.fase2 || data.fase2 || {};
 	    console.log("📌 Dati per la fase2:", savedPhase2);
             
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
