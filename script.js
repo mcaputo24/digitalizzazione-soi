@@ -505,11 +505,20 @@ const payload = {
                 body: JSON.stringify({ studentId })
             });
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
-            
+            const teacherResponse = await fetch('/.netlify/functions/get-teacher-data?studentId=' + studentId);
+let teacherData = {};
+if (teacherResponse.ok) {
+    const teacherJson = await teacherResponse.json();
+    teacherData = teacherJson?.fase2 || {};
+    console.log("🎓 Dati fase2 del docente recuperati:", teacherData);
+} else {
+    console.warn("⚠️ Nessun dato docente trovato per questo studente");
+}
+
             const data = await response.json();
 console.log("📦 Dati ricevuti da Firebase:", JSON.stringify(data, null, 2));
 
-	    const savedPhase2 = data.fase2 || {};
+	    const savedPhase2 = teacherData;
 console.log("📤 savedPhase2 passato a getPhase2FormHTML:", JSON.stringify(savedPhase2, null, 2));
 
           
