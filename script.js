@@ -632,32 +632,52 @@ console.log("📤 savedPhase2 passato a getPhase2FormHTML:", JSON.stringify(save
 }
 
     function handleRouteChange() {
-        const hash = window.location.hash;
-        Object.values(views).forEach(view => { if (view) view.style.display = 'none'; });
-        const user = firebase.auth().currentUser;
+    const hash = window.location.hash;
+    Object.values(views).forEach(view => {
+        if (view) view.style.display = 'none';
+    });
 
-        if (hash.startsWith('#/docente/studente/')) {
-            if (user) {
-                const parts = hash.split('/');
-                const studentId = parts[3];
-                const studentName = parts[4] || '';
-                if(views.studentDetail) {
-                    views.studentDetail.style.display = 'block';
-                    initializeStudentDetailView(studentId, studentName);
-                }
-            } else { window.location.hash = '#/docente/login'; }
-        } else if (hash.startsWith('#/docente/dashboard')) {
-            if (user) { views.dashboard.style.display = 'block'; initializeDashboard(); } 
-            else { window.location.hash = '#/docente/login'; }
-        } else if (hash.startsWith('#/docente/login')) {
-            views.login.style.display = 'block';
-        } else if (hash.startsWith('#/studente/anno-1')) {
-            views.questionnaire.style.display = 'block';
-            initializeQuestionnaire();
+    const user = firebase.auth().currentUser;
+
+    if (hash.startsWith('#/docente/studente/')) {
+        if (user) {
+            const parts = hash.split('/');
+            const studentId = parts[3];
+            const studentName = parts[4] || '';
+            if (views.studentDetail) {
+                views.studentDetail.style.display = 'block';
+                initializeStudentDetailView(studentId, studentName);
+            }
         } else {
-            views.home.style.display = 'block';
+            window.location.hash = '#/docente/login';
         }
+    } else if (hash.startsWith('#/docente/dashboard')) {
+        if (user) {
+            views.dashboard.style.display = 'block';
+            initializeDashboard();
+        } else {
+            window.location.hash = '#/docente/login';
+        }
+    } else if (hash.startsWith('#/docente/login')) {
+        views.login.style.display = 'block';
+
+    } else if (hash === '#/studente/fase1-anno1') {
+        const view = document.getElementById('questionnaire-fase1-anno1');
+        if (view) view.style.display = 'block';
+
+    } else if (hash === '#/studente/fase1-anno2') {
+        const view = document.getElementById('questionnaire-fase1-anno2');
+        if (view) view.style.display = 'block';
+
+    } else if (hash === '#/studente/fase1-anno3') {
+        const view = document.getElementById('questionnaire-fase1-anno3');
+        if (view) view.style.display = 'block';
+
+    } else {
+        views.home.style.display = 'block';
     }
+}
+
     
     const loginForm = document.getElementById('login-form');
     const logoutBtn = document.getElementById('logout-btn');
