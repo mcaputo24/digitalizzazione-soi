@@ -542,7 +542,10 @@ const payload = {
             contentDiv.innerHTML = html;
             
             document.getElementById('show-fase2-btn')?.addEventListener('click', () => {
-                openModal(`
+                console.log("🔥 Dati ricevuti da Firebase:", data);
+console.log("📌 Dati per la fase2:", data.fase2);
+
+		    openModal(`
   <div class="split-modal-container">
     <div class="split-modal-left">
       ${html}
