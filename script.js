@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) { throw new Error('Studente non trovato o errore di caricamento.'); }
             
             const data = await response.json();
-            
+            console.log("Dati ricevuti per lo studente:", data.fase2);
             const renderField = (label, value) => `<p><strong>${label}:</strong><br>${value || 'Non specificato'}</p>`;
 
             let html = `
