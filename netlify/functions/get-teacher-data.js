@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+
 if (!admin.apps.length) {
   const svc = JSON.parse(process.env.FIREBASE_CREDENTIALS);
   admin.initializeApp({ credential: admin.credential.cert(svc) });
@@ -31,10 +32,11 @@ exports.handler = async (event) => {
 
   try {
     const snap = await docRef.get();
-    const data = snap.exists ? (snap.data()?.[formType] || {}) : {};
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        fase2: snap.exists ? (snap.data()?.fase2 || {}) : {}
+      })
     };
   } catch (err) {
     console.error('Firestore error:', err);
