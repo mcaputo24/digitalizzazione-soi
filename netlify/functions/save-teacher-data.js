@@ -32,12 +32,16 @@ exports.handler = async (event) => {
     const schoolId = process.env.SCHOOL_ID;
     const { formType, studentId: contextId = 'default', data } = JSON.parse(event.body);
 
-    if (!schoolId || !formType || !contextId || !data) {
-      throw new Error('Dati insufficienti per il salvataggio.');
-    }
+// Estrai i dati specifici della fase (es. fase1, fase2, fase3)
+const formSpecificData = data[formType];
 
-    const timestamp = admin.firestore.FieldValue.serverTimestamp();
-    const dataToSave = { ...data, teacherUid, lastUpdated: timestamp };
+if (!schoolId || !formType || !contextId || !formSpecificData || Object.keys(formSpecificData).length === 0) {
+  throw new Error('Dati insufficienti per il salvataggio.');
+}
+
+const timestamp = admin.firestore.FieldValue.serverTimestamp();
+const dataToSave = { ...formSpecificData, teacherUid, lastUpdated: timestamp };
+
 
     const docRef = db
       .collection('scuole')
