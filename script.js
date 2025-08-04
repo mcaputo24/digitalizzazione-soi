@@ -5,6 +5,7 @@ let selectedNode = null;
 let controlsContent = null;
 
 function initMap() {
+console.log('▶️ initMap chiamata', document.getElementById('cy'), document.getElementById('map-controls'));
   const cyContainer       = document.getElementById('cy');
   const controlsContainer = document.getElementById('map-controls');
   if (!cyContainer || !controlsContainer) return;
